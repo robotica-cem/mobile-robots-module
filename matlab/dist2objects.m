@@ -176,4 +176,38 @@ d = dist2objects(cat(1, th, x, y, corners));
 assert(md == realmax, 'Minimum distance incorrect')
 display('Test 4 OK')
 
-            
+
+% 5) Object in fourth quarter
+tol = 1e-3; % High tolerance due to discretization of space 
+x = 0;
+y = -1;
+th = pi/2;
+% Lidar is pointing in positive y direction.
+% Fourth quarter of the lidar is global first quarter
+corners = [3;4;4;3];
+d = dist2objects(cat(1, th, x, y, corners));
+
+[md, minind] = min(d);
+assert( abs(minind-160) < 30, 'Bearing incorrect')
+%assert(md , 'Minimum distance incorrect')
+%find(d< 100)
+
+display('Test 5 OK')
+
+                       
+% 6) Rotate lidar
+tol = 1e-3; % High tolerance due to discretization of space 
+x = 2;
+y = 2;
+th = (1:180)/180*2*pi;
+data = zeros(180,180);
+corners = [3;4;4;3];
+k=0;
+for th_ = th
+    k = k+1;
+    data(:,k) = dist2objects(cat(1, th_, x, y, corners));
+end
+
+plot_lidar(data', th, th, 10)
+
+                        
