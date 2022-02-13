@@ -1,0 +1,131 @@
+\documentclass[margin=10pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf,tikz}
+
+\newcommand{\largejoint}{%
+  \draw[fill, black] (0,0) circle[radius = 2pt];
+  \draw[fill, white] (0,0) circle[radius = 1pt];
+}
+\newcommand{\joint}{%
+  \draw[fill, black] (0,0) circle[radius = 1pt];
+  \draw[fill, white] (0,0) circle[radius = 0.2mm];
+}
+
+\newcommand{\wheel}[2]{%
+  \draw[fill, black!80, rounded corners=1pt] (-#2 cm,-#1 cm) rectangle (#2 cm, #1 cm);
+  \foreach \xx in {0.25, 0.75} {
+   \pgfmathsetmacro{\xm}{\xx*(#2)}
+    \draw[thick,  black!50] (\xm cm, -#1 cm) to (\xm cm, #1 cm);
+    \draw[thick,  black!50] (-\xm cm, -#1 cm) to (-\xm cm, #1 cm);
+  }
+}
+
+
+\begin{document}
+
+\def\track{2}
+\def\wbase{3.9}
+\def\wwidth{0.255}
+\def\wrad{0.38}
+\def\linkl{0.3}
+\def\trail{0.1}
+
+
+
+\pgfmathsetmacro{\htrack}{\track / 2}
+\pgfmathsetmacro{\hwbase}{\wbase / 2}
+\pgfmathsetmacro{\hwwidth}{\wwidth / 2}
+%\pgfmathsetmacro{\ackangle}{atan(\htrack/\wbase)}
+\pgfmathsetmacro{\ackdist}{\linkl*\htrack/\wbase)}
+\pgfmathsetmacro{\staxisoffsetx}{1.7*\hwwidth}
+
+
+\begin{tikzpicture}[scale=2, ]
+
+  \begin{scope}[yshift = -\hwbase cm,]
+    \draw (-\htrack cm, -0.02 cm) rectangle (\htrack cm, 0.02 cm);
+    \begin{scope}[xshift = -\htrack cm,]
+      \wheel{\wrad}{\hwwidth}
+    \end{scope}
+    \begin{scope}[xshift = \htrack cm,]
+      \wheel{\wrad}{\hwwidth}
+    \end{scope}
+  \end{scope}
+
+  % Front axle and steering
+    \begin{scope}[yshift = \hwbase cm,]
+
+      \begin{scope}[yshift=-\linkl cm]
+      \draw[rounded corners=0.21mm] (0,0) -- (-0.1 cm, \linkl cm) -- (0.1cm, \linkl cm) -- (0,0) -- cycle;
+      \largejoint
+
+    \begin{scope}[xshift=-0.8mm, yshift=\linkl cm]
+      \node[coordinate] (sjli) at (0,0) {};
+      \joint
+      \end{scope}
+      \begin{scope}[xshift=0.8mm, yshift=\linkl cm]
+        \node[coordinate] (sjri) at (0,0) {};
+        \joint
+      \end{scope}
+
+      \end{scope}
+
+      \begin{scope}[xshift = -\htrack cm]
+        \node[coordinate] (lwaxis) at (0,0) {};
+  
+        \begin{scope}[xshift =  \staxisoffsetx cm]
+          \begin{scope}[yshift=\trail cm]
+          \node[coordinate] (sal) at (0,0) {};
+        \end{scope}
+        \begin{scope}[xshift=\ackdist cm, yshift=-\linkl cm]
+          \node[coordinate] (sjlo) at (0,0) {};
+          \joint
+        \end{scope}
+      \end{scope}
+      \draw[] (sjlo) to (sjli);
+      \draw[ultra thick] (sjlo) to (sal);
+      \draw[ultra thick] (0,0) to (sal);
+      \begin{scope}[xshift =  \staxisoffsetx cm]
+      \begin{scope}[yshift=\trail cm]
+        \largejoint
+      \end{scope}
+    \end{scope}
+  \end{scope}
+
+  \draw[thin, dashed] (sal) -- ++(-1cm, 0);
+  \draw[thin, dashed] (lwaxis) -- ++(-1cm, 0);
+  \draw[thin, dashed] (sal) -- ++(0 , -1cm);
+  
+  % Right wheel
+      \begin{scope}[xshift = \htrack cm]
+        \begin{scope}[xshift =  -\staxisoffsetx cm]
+          \begin{scope}[yshift=\trail cm]
+          \node[coordinate] (sar) at (0,0) {};
+        \end{scope}
+        \begin{scope}[xshift= -\ackdist cm, yshift=-\linkl cm]
+          \node[coordinate] (sjro) at (0,0) {};
+          \joint
+        \end{scope}
+      \end{scope}
+      \draw[] (sjro) to (sjri);
+      \draw[ultra thick] (sjro) to (sar);
+      \draw[ultra thick] (0,0) to (sar);
+      \begin{scope}[xshift = -\staxisoffsetx cm]
+      \begin{scope}[yshift=\trail cm]
+        \largejoint
+      \end{scope}
+    \end{scope}
+  \end{scope}
+      
+        \begin{scope}[xshift = -\htrack cm,]
+      \wheel{\wrad}{\hwwidth}
+    \end{scope}
+    \begin{scope}[xshift = \htrack cm,]
+      \wheel{\wrad}{\hwwidth}
+    \end{scope}
+    
+  \end{scope}
+
+\end{tikzpicture}
+\end{document}

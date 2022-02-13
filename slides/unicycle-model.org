@@ -1,0 +1,98 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169]
+#+OPTIONS: H:2
+# #+BEAMER_THEME: Madrid
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+     
+#+LaTex_HEADER: \usepackage{khpreamble, euscript}
+#+LaTex_HEADER: \DeclareMathOperator{\atantwo}{atan2}
+#+LaTex_HEADER: \newcommand*{\ctrb}{\EuScript{C}}
+#+LaTex_HEADER: \newcommand*{\obsv}{\EuScript{O}}
+
+#+title:  Robot móvil tipo uniciclo
+# #+date: 2018-04-05
+
+* What do I want the students to understand?			   :noexport:
+- The dynamics of the unicycle model
+
+* Activities                                                       :noexport:
+- Program function that takes linear and angular velocity in SI measurements as input  and
+  computes the velocity of each wheel.
+- Implement open-loop control to move roverbot in square.
+  
+
+* Mobile robot unicycle model
+
+** El modelo uniciclo
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=.3\linewidth]{../figures/X80Pro.jpg}
+    \end{center}
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+#+BEAMER: \pause
+
+*Dinámica*
+
+    \[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
+
+
+
+    \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
+
+    Called unicycle model.
+#+BEAMER: \pause
+
+*Actividad* ¿Es posible alcanzar cualquier punto en el espacio de estados \(\begin{bmatrix} x &  y & \theta \end{bmatrix}^T\) con una señal de entrada $u(t)$ bien diseñada?
+
+
+
+
+** El modelo uniciclo
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model-details}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+
+*Cinemática*
+
+#+BEAMER: \pause
+
+*Actividad* Determine
+
+1) La velocidad lineal ($v_R$, $v_L$) de cada rueda dado su velocidad angular ($\omega_R$, $\omega_L$)
+
+2) La velocidad lineal $v$ del centro robot dado las dos velocidades $v_R$ y $v_L$
+
+3) La velocidad angular $\omega$ del robot dado las dos velocidades $v_R$ y $v_L$
+
+4) Las relaciones invertidas. Es decir, las velocidades angulares $\omega_R$ y $\omega_L$ de los ruedos dado las velocidades $v$ y $\omega$.
+
+   
+** Implementación de la cinemática
+
+

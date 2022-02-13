@@ -1,0 +1,537 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169]
+#+OPTIONS: H:2
+# #+BEAMER_THEME: Madrid
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+     
+#+LaTex_HEADER: \usepackage{khpreamble, euscript}
+#+LaTex_HEADER: \DeclareMathOperator{\atantwo}{atan2}
+#+LaTex_HEADER: \newcommand*{\ctrb}{\EuScript{C}}
+#+LaTex_HEADER: \newcommand*{\obsv}{\EuScript{O}}
+
+#+title:  The unicycle model
+# #+date: 2018-04-05
+
+* What do I want the students to understand?			   :noexport:
+- The dynamics of the unicycle model
+
+* Activities                                                       :noexport:
+- Program function that takes linear and angular velocity in SI measurements as input  and
+  computes the velocity of each wheel.
+- Implement open-loop control to move roverbot in square.
+  
+
+* Mobile robot unicycle model
+
+** The unicycle model
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=.3\linewidth]{../../figures/X80Pro.jpg}
+    \end{center}
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../../figures/unicycle-model}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+#+BEAMER: \pause
+
+    \[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
+
+
+
+    \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
+
+    Called unicycle model.
+#+BEAMER: \pause
+
+*Activity* Can we reach any point in state space \(\begin{bmatrix} x &  y & \theta \end{bmatrix}^T\) by a suitably designed input signal sequence $u(t)$?
+
+** The unicycle model
+
+\small 
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../../figures/unicycle-model-op}
+    \end{center}
+
+    \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+Linearized model using deviation variables
+\[ \xi(t) = \xi_0 + z(t), \quad \frac{d}{dt} \xi = \frac{d}{dt} z\]
+\[ \frac{d}{dt} z = \begin{bmatrix} \omega\\ v\cos\theta_0 \\ v\sin\theta_0 \end{bmatrix}
+= \underbrace{0}_{A} z + \underbrace{\begin{bmatrix} 1 & 0 \\ 0 & 0\\ 0 & 1\end{bmatrix}}_{B} \begin{bmatrix}\omega\\v\end{bmatrix} \]
+
+#+BEAMER: \pause
+
+\begin{align*} \mathcal{C} &= \begin{bmatrix} B & AB & A^2B \end{bmatrix}\\
+&= \begin{bmatrix} 1 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 0\\ 0 & 1 & 0 & 0 & 0 & 0\end{bmatrix}
+\end{align*}
+
+#+BEAMER: \pause
+
+*Activity* Is the linearized model controllable? (Hint: What is \(\text{rank}\, \mathcal{C}\)?)
+
+
+* Observability                                                    :noexport:
+** The unicycle model - bearing measurement
+
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+Single bearing measurement.
+
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../../figures/unicycle-model-bearing}
+    \end{center}
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+\[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix}\]
+
+#+BEAMER: \pause
+
+*Activity* Is the system observable with one bearing-only measurement?
+
+
+** The unicycle model - bearing and distance masurement
+
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../../figures/unicycle-model-bearing-distance}
+    \end{center}
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+\[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix}\]
+
+#+BEAMER: \pause
+
+
+*Activity* Is the system observable with one bearing and one distance measurement?
+
+* Canonical forms                                                  :noexport:
+
+** Formas canonicas
+
+- Forma controlable
+- Forma observable
+
+*** Recurso 
+[[https://lpsa.swarthmore.edu/Representations/SysRepTransformations/TF2SS.html][https://lpsa.swarthmore.edu/Representations/SysRepTransformations/TF2SS.html]]
+    
+* Estabilidad                                                      :noexport:
+
+** Estabilidad
+   
+   La solución homógena de \(\dot{x} = Ax\)  se puede escribir
+   \[ x(t) = \mathrm{e}^{\lambda_1 t}\alpha_1v_1 + \mathrm{e}^{\lambda_2 t}\alpha_2v_2 + \cdots + \mathrm{e}^{\lambda_n t}\alpha_nv_n,\]
+   donde \(\lambda_1\), \(\lambda_2\), \(\ldots\), \(\lambda_n\) son los *eigenvalores* de \(A\). 
+
+   Estabilidad requiere que *cada una* de las funciones exponenciales va hacia cero.
+   \[\Rightarrow \qquad \mathrm{Re}\{\lambda_i\} < 0, \; \forall i=1,2,3\ldots, n\]
+
+Los eigenvalores de $A$ son los *polos* del sistema.
+
+** Los eigenvalores
+   \(\lambda\) y \(v\) es un par de eigenvalor y eigenvector de la matriz $A$ si
+   \[Av = \lambda v\]
+#+BEAMER: \pause
+    \[ \lambda v - Av = 0\]
+#+BEAMER: \pause
+    \[ (\lambda I - A)v = 0\]
+#+BEAMER: \pause
+   Para que la ecuación tenga soluciones no-triviales
+    \[ \det (\lambda I - A) = 0 \quad \leftarrow \text{\alert{Ecuación característica}}\]
+    
+   
+* Modelo compartamental                                            :noexport:
+
+** De espacio de estados a función de transferencia
+
+** Modelo compartimental
+   #+begin_export latex
+    \small
+   \begin{columns}
+     \begin{column}{0.5\linewidth}
+       \begin{center}
+	 \begin{tikzpicture}[scale=0.8, transform shape,
+	   compartment/.style={rounded corners=5mm, minimum height=14mm, minimum width=16mm},
+	   node distance=46mm,
+	   ]
+
+	   \node[compartment, draw=red, ] (comp1) {$V_1, c_1$};
+	   \node[compartment, right of=comp1, draw=olive,] (comp2) {$V_2, c_2$};
+
+	   \node[coordinate, above of=comp1, node distance=20mm] (input) {};
+	   \node[coordinate, below of=comp1, node distance=20mm] (output) {};
+
+	   \draw[->, double] (input) -- node[right]{$c_{i}Q_i$} (comp1);
+	   \draw[->, double] (comp1) -- node[right]{$c_{1}Q_o$} (output);
+	   \draw[<->, double] (comp1) -- node[above]{$(c_{2}-c_1)Q$} (comp2);
+
+	 \end{tikzpicture}
+       \end{center}
+
+     \end{column}
+     \begin{column}{0.5\linewidth}
+       \begin{equation*}
+	 \begin{aligned}
+	   V_1\frac{dc_1}{dt} &= Q(c_2-c_1) - Q_{o}c_1 + Q_ic_{i}, \quad  & c_1 \geq 0 \\
+	   V_2\frac{dc_2}{dt} &= Q(c_1-c_2),  & c_2 \geq 0,
+	 \end{aligned}
+       \end{equation*}
+     \end{column}
+   \end{columns}
+
+   \begin{center}
+   \Large
+   \begin{align*}
+     \dot{x} &= \overbrace{\begin{bmatrix} \textcolor{red!80!black}{-\frac{Q+Q_o}{V_1}}  & \textcolor{red!80!black}{\frac{Q}{V_1}}\\
+                 \textcolor{red!80!black}{\frac{Q}{V_2}}  & \textcolor{red!80!black}{-\frac{Q}{V_2}}\end{bmatrix}}^A \begin{bmatrix} {x_1}\\ {x_2}\end{bmatrix}  + \overbrace{\begin{bmatrix} \textcolor{red!80!black}{\frac{1}{V_1}} \\ \textcolor{red!80!black}{0} \end{bmatrix}}^B  u \\
+          y &=  \underbrace{\begin{bmatrix} \textcolor{red!80!black}{1} &  \textcolor{red!80!black}{0}\end{bmatrix}}_C \begin{bmatrix} x_1\\ x_2\end{bmatrix}
+   \end{align*}
+   
+   \end{center}
+   #+end_export
+
+
+
+
+
+** De espacio de estados a función de transferencia
+
+   \footnotesize
+
+   \begin{align*}
+     \dot{x} &= \overbrace{\begin{bmatrix} \textcolor{red!80!black}{-\frac{Q+Q_o}{V_1}}  & \textcolor{red!80!black}{\frac{Q}{V_1}}\\
+                 \textcolor{red!80!black}{\frac{Q}{V_2}}  & \textcolor{red!80!black}{-\frac{Q}{V_2}}\end{bmatrix}}^A \begin{bmatrix} {x_1}\\ {x_2}\end{bmatrix}  + \overbrace{\begin{bmatrix} \textcolor{red!80!black}{\frac{1}{V_1}} \\ \textcolor{red!80!black}{0} \end{bmatrix}}^B  u  = Ax + Bu\\
+          y &=  \underbrace{\begin{bmatrix} \textcolor{red!80!black}{1} &  \textcolor{red!80!black}{0}\end{bmatrix}}_C \begin{bmatrix} x_1\\ x_2\end{bmatrix} = Cx
+   \end{align*}
+
+   Aplicando la transformada de Laplace
+   \begin{align*}
+   sX - x(0) &= AX + BU\\
+   Y &= CX
+   \end{align*}
+   #+BEAMER: \pause
+   Despejando $X(s)$
+   \begin{align*}
+   X(s) &= (sI-A)^{-1}x(0) + (sI-A)^{-1}BU(s)\\
+   Y(s) &= C\big((sI-A)^{-1}x(0) + (sI-A)^{-1}BU(s)\big)\\
+        & = \underbrace{C(sI-A)^{-1}x(0)}_{\text{\alert{Respuesta transitoria}}} + \underbrace{C(sI-A)^{-1}B}_{\text{\alert{Función de transf.}}}U(s)
+   \end{align*}
+   
+
+** Transformada de Laplace de una función exponencial
+    
+    \[F(s) = \laplace{f(t)} = \int_0^\infty f(t)\mexp{-st}dt\]
+   #+BEAMER: \pause
+    \[\laplace{\mexp{pt}} = \int_0^\infty \mexp{pt}\mexp{-st}dt = \int_0^\infty \mexp{-(s-p)t}dt = \frac{1}{s-p} = (s-p)^{-1}, \quad \mathrm{Re}\{s\} > \mathrm{Re}\{p\} \]
+
+
+** Solución homógena de sistemas en espacio de estados
+   \small
+   \begin{align*}
+   \dot{x} &= Ax, \qquad x(0) = x_0\\
+    sX(s) - x(0) &= AX(s)
+    \end{align*}
+   #+BEAMER: \pause
+
+*** Solución en dominio de Laplace
+   :PROPERTIES:
+   :beamer_col: 0.5
+   :beamer_env: block
+   :END:
+
+   \[X(s) = (sI-A)^{-1}x(0)\]
+
+   #+BEAMER: \pause
+
+*** Solución en dominio de tiempo
+   :PROPERTIES:
+   :beamer_col: 0.5
+   :beamer_env: block
+   :END:
+
+   \[ x(t) = \Phi(t)x(0) = \mathrm{e}^{At}x(0)\]
+
+   Donde  $\Phi:\,\mathbb{R} \rightarrow \mathbb{R}^{n\times n}$ \[\Phi(t)=\mathrm{e}^{At} = I + tA + \frac{t^2}{2!}A^2 + \frac{t^3}{3!}A^3 + \cdots\] 
+
+** La transformada de Laplace de la exponencial de una matriz
+
+   \[ f(t)=\mathrm{e}^{At} \qquad \overset{\mathcal{L}}{\longleftrightarrow} \qquad F(s) = (sI-A)^{-1} \]
+
+      #+BEAMER: \pause
+
+      \[(sI-A)^{-1} = \frac{1}{\det (sI-A)} \, \text{adj}\, (sI-A) \]
+
+      \(\det (sI-A)\) es un polinomio en \(s\), llamado \alert{polinomio característico}. Sus raíces, es decir las soluciones de la \alert{ecuación característica}
+      \[ \det(sI-A) = 0\]
+      son los \alert{polos} del sistema y los eigenvalores de \(A\).
+
+** De espacio de estados a función de transferencia
+
+   \footnotesize
+
+   \begin{align*}
+     \dot{x} &= \overbrace{\begin{bmatrix} \textcolor{red!80!black}{-\frac{Q+Q_o}{V_1}}  & \textcolor{red!80!black}{\frac{Q}{V_1}} \\
+                 \textcolor{red!80!black}{\frac{Q}{V_2}}  & \textcolor{red!80!black}{-\frac{Q}{V_2}}\end{bmatrix}}^A \begin{bmatrix} {x_1}\\ {x_2}\end{bmatrix}  + \overbrace{\begin{bmatrix} \textcolor{red!80!black}{\frac{1}{V_1}} \\ \textcolor{red!80!black}{0} \end{bmatrix}}^B  u
+= \begin{bmatrix} \textcolor{red!80!black}{a}  & \textcolor{red!80!black}{b} \\
+                 \textcolor{red!80!black}{c}  & \textcolor{red!80!black}{d}\end{bmatrix} x  + \begin{bmatrix} \textcolor{red!80!black}{b_1} \\ \textcolor{red!80!black}{0} \end{bmatrix} u, \qquad
+          y =  \underbrace{\begin{bmatrix} \textcolor{red!80!black}{1} &  \textcolor{red!80!black}{0}\end{bmatrix}}_C x\\
+   X(s) &= (sI-A)^{-1}x(0) + (sI-A)^{-1}BU(s)\\
+   Y(s) &= \underbrace{C(sI-A)^{-1}x(0)}_{\text{\alert{Respuesta transitoria}}} + \underbrace{C(sI-A)^{-1}B}_{\text{\alert{Función de transf.}}}U(s)
+   \end{align*}
+
+#+BEAMER: \pause
+   
+*** \( (sI-A)^{-1}\)
+   :PROPERTIES:
+   :beamer_col: 0.5
+   :END:
+
+   \begin{align*}
+    (sI-A)^{-1} &= \begin{bmatrix} s-a & -b\\-c & s-d\end{bmatrix}^{-1}\\
+&=\frac{1}{\det (sI-A)} \, \text{adj}\, (sI-A)\\
+         &= \frac{1}{(s-a)(s-d) - bc} \begin{bmatrix} s-d & b\\c & s-a \end{bmatrix}
+	 \end{align*}
+
+#+BEAMER: \pause
+
+*** \( G(s) \)
+   :PROPERTIES:
+   :beamer_col: 0.5
+   :END:
+
+   \begin{align*}
+   G(s) &= C(sI-A)^{-1}B\\
+        &= \begin{bmatrix} \textcolor{red!80!black}{1} &  \textcolor{red!80!black}{0}\end{bmatrix} \frac{1}{(s-a)(s-d) - bc} \begin{bmatrix} s-d & b\\c & s-a \end{bmatrix} \begin{bmatrix} \textcolor{red!80!black}{b_1} \\ \textcolor{red!80!black}{0} \end{bmatrix}\\
+       &=  \frac{\textcolor{white}{b_1(s-d)}}{\textcolor{white}{(s-a)(s-d) - bc}}
+   \end{align*}
+
+
+** De espacio de estados a función de transferencia
+
+   \footnotesize
+
+   \begin{align*}
+     \dot{x} &= \overbrace{\begin{bmatrix} \textcolor{red!80!black}{-\frac{Q+Q_o}{V_1}}  & \textcolor{red!80!black}{\frac{Q}{V_1}} \\
+                 \textcolor{red!80!black}{\frac{Q}{V_2}}  & \textcolor{red!80!black}{-\frac{Q}{V_2}}\end{bmatrix}}^A \begin{bmatrix} {x_1}\\ {x_2}\end{bmatrix}  + \overbrace{\begin{bmatrix} \textcolor{red!80!black}{\frac{1}{V_1}} \\ \textcolor{red!80!black}{0} \end{bmatrix}}^B  u
+= \begin{bmatrix} \textcolor{red!80!black}{a}  & \textcolor{red!80!black}{b} \\
+                 \textcolor{red!80!black}{c}  & \textcolor{red!80!black}{d}\end{bmatrix} x  + \begin{bmatrix} \textcolor{red!80!black}{b_1} \\ \textcolor{red!80!black}{0} \end{bmatrix} u, \qquad
+          y =  \underbrace{\begin{bmatrix} \textcolor{red!80!black}{1} &  \textcolor{red!80!black}{0}\end{bmatrix}}_C x\\
+   X(s) &= (sI-A)^{-1}x(0) + (sI-A)^{-1}BU(s)\\
+   Y(s) &= \underbrace{C(sI-A)^{-1}x(0)}_{\text{\alert{Respuesta transitoria}}} + \underbrace{C(sI-A)^{-1}B}_{\text{\alert{Función de transf.}}}U(s)
+   \end{align*}
+
+   
+*** \( (sI-A)^{-1}\)
+   :PROPERTIES:
+   :beamer_col: 0.5
+   :END:
+
+   \begin{align*}
+    (sI-A)^{-1} &= \begin{bmatrix} s-a & -b\\-c & s-d\end{bmatrix}^{-1}\\
+&=\frac{1}{\det (sI-A)} \, \text{adj}\, (sI-A)\\
+         &= \frac{1}{(s-a)(s-d) - bc} \begin{bmatrix} s-d & b\\c & s-a \end{bmatrix}
+	 \end{align*}
+
+
+*** \( G(s) \)
+   :PROPERTIES:
+   :beamer_col: 0.5
+   :END:
+
+   \begin{align*}
+   G(s) &= C(sI-A)^{-1}B\\
+        &= \begin{bmatrix} \textcolor{red!80!black}{1} &  \textcolor{red!80!black}{0}\end{bmatrix} \frac{1}{(s-a)(s-d) - bc} \begin{bmatrix} s-d & b\\c & s-a \end{bmatrix} \begin{bmatrix} \textcolor{red!80!black}{b_1} \\ \textcolor{red!80!black}{0} \end{bmatrix}\\
+       &=  \frac{\textcolor{black}{b_1(s-d)}}{\textcolor{black}{(s-a)(s-d) - bc}}
+   \end{align*}
+
+** Modelling example
+
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../../figures/active-mass-damper-system-horizontal}
+#+END_CENTER
+
+** State-space model and transfer function
+
+An \(n\)th order system with the state-space representation
+\begin{equation}
+\begin{cases}
+\dot{x}(t)&=Ax(t)+Bu(t)\\ y(t)&=Cx(t)+Du(t)
+\end{cases}\tag{$*$}
+\end{equation}
+has the transfer function
+\begin{equation*}
+G(s)=C(sI-A)^{-1}B+D=\frac{b(s)}{a(s)}
+\end{equation*}
+from the input signal $u$ to the output signal $y$. The denominator polynominal is
+$a(s)=\det(sI-A)$ and is of order \(n\). If $D\neq0$ then the numerator polynomial $b(s)$ is of order $n$, if $D=0$ then $b(s)$ is of order $\le n-1$.
+
+** The state-space representation is not unique
+Make a change of state variables in the system $(*)$:
+Let $x=Tz$ $\Leftrightarrow$ $z=T^{-1}x$, where $T$ is an invertible (non-singular) matrix. Then
+\begin{align*}
+\dot{z}&=T^{-1}ATz+T^{-1}Bu\\ y&=CTz+Du
+\end{align*}
+with transfer function
+\begin{equation*}
+G(s)=CT\left(sI-T^{-1}AT\right)^{-1}T^{-1}B+D=C(sI-A)^{-1}B+D
+\end{equation*}
+This means that a system with transfer function $G(s)$ has infinitely many different state-space representations.
+
+** Stability
+A system 
+\begin{equation*}
+\dot{x}=Ax, \ \ x(0)=x_0\ \ (\text{i.e.\ the system }(*) \text{ with } u\equiv 0)
+\end{equation*}
+is /asymptotically stable/  if  $\underset{t\to\infty}{\lim}x(t)=0$ for all  $x_0\in\Bbb{R}^n$.\\
+
+A system is asymptotically stable if and only if all eigenvalues of the \(A\)-matrix have strict negative real parts (are strictly in the LHP). 
+
+** Different notions of stability
+
+- BIBO stability (Bounded Input - Bounded Output) refers to the effect of the input signal $u(t)$ on the output signal $y(t)$, ignoring the initial state \(x_0\).
+- Asymptotic stability refers to the effect of  $x_0$ on the state vector $x(t)$ 
+(it is assumed that $u(t)\equiv 0$, $y$ is ignored).
+
+Connections:
+- A system is BIBO stable if it is asymptotically stable.
+# - A system which is a minimal realisation is BIBO stable if and only if it is asymptotically stable.
+
+** Controllable/Reachable canonical form
+The system with transfer function
+\begin{equation*}
+G(s)=\frac{b_1s^{n-1}+\dots+b_{n-1}s+b_n}{s^n+a_1s^{n-1}+\dots
+  +a_{n-1}s+a_n}
+\end{equation*}
+can be represented on state-space form as
+\begin{align*}
+\dot{x}&=\bbm -a_1& -a_2& \cdots& -a_{n-1}& -a_n\\
+1& 0& \cdots& 0& 0\\
+0& 1& \cdots& 0& 0\\
+\vdots& \vdots& \ddots& \vdots& \vdots\\
+0& 0& \cdots& 1& 0\ebm x+
+\bbm 1\\ 0\\ 0\\ \vdots\\ 0\ebm u\\
+y&=\bbm b_1& b_2& \cdots& b_n\ebm x
+\end{align*}
+
+** The matrix exponential					   :noexport:
+The scalar exponential function $\mexp{at}$  can be /defined/ as the solution to the differential equation
+\begin{equation*}
+\frac{dy}{dt}=ay(t),\ \ \ y(0)=1\ \ \ \Longrightarrow\ \ \ 
+\mexp{at}=\sum_{k=0}^{\infty}\frac{1}{k!}(at)^k
+\end{equation*}
+
+Similarly, the matrix exponential $e^{At}$ can be defined as the solution to 
+\begin{gather*}
+\frac{d}{dt}\Phi(t)=A\Phi(t),\ \ \ \Phi(0)=I,\ \ \ 
+A,\Phi(t)\in\mathbb{R}^{n\times n}\\
+\Longrightarrow\ \ \
+\mexp{At}=\sum_{k=0}^{\infty}\frac{1}{k!}(At)^k
+\end{gather*}
+
+** The Laplace transform of \(\mexp{At}\)			   :noexport:
+Taking the Laplace transform of the ODE
+\begin{equation*}
+\frac{d}{dt}\Phi(t)=A\Phi(t),\ \ \ \Phi(0)=I
+\end{equation*}
+gives
+\begin{equation*}
+s\Phi(s)-I=A\Phi(s)\ \ \Leftrightarrow\ \ \Phi(s)=(sI-A)^{-1}
+\end{equation*}
+Hence,
+\begin{equation*}
+\laplace{\mexp{At}}=(sI-A)^{-1}
+\end{equation*}
+
+** Controllability/Reachability 
+A state vector $x^*\in\mathbb{R}^n$ is /reachable/ (or /controllable/) if there exists an input signal
+ $u(t)$ such that $x(T)=x^*$, for some $T<\infty$, when $x(0)=0$. If all $x^*\in\mathbb{R}^n$ are controllable, then the /system (\(*\))/ is controllable.
+
+** A system on controllable canonical form is controllable 
+\begin{align*}
+\dot{x}(t)&=\bbm -2& -1\\ 1& 0\ebm x(t)+\bbm 1\\ 0\ebm u(t)\\
+y(t)&=\bbm 1& 1\ebm x(t)
+\end{align*}
+\begin{equation*}
+G(s)=\frac{s+1}{s^2+2s+1}=\frac{s+1}{(s+1)^2}=\frac{1}{s+1}
+\end{equation*}
+\begin{equation*}
+\ctrb=\bbm B & AB \ebm = \bbm 1& -2\\ 0 & 1\ebm \quad \Rightarrow \quad \det\ctrb \neq 0 \quad \Leftrightarrow \quad \text{controllable}
+\end{equation*}
+
+** Minimal realisation						   :noexport:
+
+A state-space representation ($*$) of a system with transfer function $G(s)$ is a /minimal realisation/ if there are no other state-space representation of \(G(s)\) with lower dimension of the state vector. 
+
+** Minimal realisation, example 				   :noexport:
+
+The second order state-space model from the previous example  has the transfer function  $G(s)=\frac{1}{s+1}$. A minimal realisation for this system is
+\begin{align*}
+\dot{x}(t)&=-x(t)+u(t)\\
+y(t)&=x(t)
+\end{align*}
+where the state vector has dimension one, i.e. $x(t)$ is a scalar.
+
+
+* State space models                                               :noexport:
+
+** State-space model and transfer function
+
+An \(n\)th order system with the state-space representation
+\begin{equation}
+\begin{cases}
+\dot{x}(t)&=Ax(t)+Bu(t)\\ y(t)&=Cx(t)+Du(t)
+\end{cases}\tag{$*$}
+\end{equation}
+has the transfer function
+\begin{equation*}
+G(s)=C(sI-A)^{-1}B+D=\frac{b(s)}{a(s)}
+\end{equation*}
+from the input signal $u$ to the output signal $y$. The denominator polynominal is
+$a(s)=\det(sI-A)$ and is of order \(n\). If $D\neq0$ then the numerator polynomial $b(s)$ is of order $n$, if $D=0$ then $b(s)$ is of order $\le n-1$.
+
+** State feedback control
+   Introduce the control law
+   \[ u = -Kx + k_0y_{ref}\] Inserted into the state-space system this gives
+   \[ \dot{x} = Ax + B(-Kx + k_0y_{ref}) = (A-BK) x + k_0 B y_{ref} \]
+   The poles of the closed-loop system are the eigenvalues of \(A-BK\). 
+
+   Assume we have specifications of the closed-loop system in terms of desired poles. This gives the desired characteristic polynomial 
+   \[ (s-p_1)(s-p_2)\cdots (s-p_n) = s^n + \alpha_1 s^{n-1} + \cdots + \alph_n\]
+   Calculate the characteristic polynomial of the closed-loop system
+   \[ \det \big(sI - (A-BK)\big) \]
+   and determine the feedback gain \(K = \bbm k_1 & k_2 & \cdots & k_n\ebm \) by comparing coefficients with the desired characteristic equation.
+

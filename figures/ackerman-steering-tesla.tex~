@@ -1,0 +1,50 @@
+\documentclass[margin=10pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf,tikz}
+
+\newcommand{\joint}{%
+  \draw[fill, white] (0,0) circle[radius = 6pt];
+  \draw[fill, black] (0,0) circle[radius = 2pt];
+}
+
+\newcommand{\wheel}[2]{%
+  \draw[fill, black!80, rounded corners=2pt] (-#2 cm,-#1 cm) rectangle (#2 cm, #1 cm);
+}
+
+
+\begin{document}
+
+\def\track{2}
+\def\wbase{3.9}
+\def\wwidth{0.255}
+\def\wrad{0.38}
+
+\pgfmathsetmacro{\htrack}{\track / 2}
+\pgfmathsetmacro{\hwbase}{\wbase / 2}
+\pgfmathsetmacro{\hwwidth}{\wwidth / 2}
+
+\begin{tikzpicture}[scale=1, ]
+
+  \begin{scope}[yshift = -\hwbase cm,]
+    \draw (-\htrack cm, -0.02 cm) rectangle (\htrack cm, 0.02 cm);
+    \begin{scope}[xshift = -\htrack cm,]
+      \wheel{\wrad}{\hwwidth}
+    \end{scope}
+    \begin{scope}[xshift = \htrack cm,]
+      \wheel{\wrad}{\hwwidth}
+    \end{scope}
+  \end{scope}
+
+    \begin{scope}[yshift = \hwbase cm,]
+    \begin{scope}[xshift = -\htrack cm,]
+      \wheel{\wrad}{\hwwidth}
+    \end{scope}
+    \begin{scope}[xshift = \htrack cm,]
+      \wheel{\wrad}{\hwwidth}
+    \end{scope}
+    
+  \end{scope}
+
+\end{tikzpicture}
+\end{document}
