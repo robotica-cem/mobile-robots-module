@@ -1,4 +1,4 @@
-% Created 2022-02-23 Wed 10:08
+% Created 2022-02-23 Wed 11:09
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -34,13 +34,13 @@
 \maketitle
 
 \section{Mobile robot unicycle model}
-\label{sec:org753b547}
+\label{sec:org7522043}
 
-\begin{frame}[label={sec:org45ff32d}]{Robót móvil - modelo uniciclo}
+\begin{frame}[label={sec:orgdef3f17}]{Robót móvil - modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
- \includegraphics[width=.3\linewidth]{../figures/X80Pro.jpg}
+ \includegraphics[width=.8\linewidth]{../figures/X80Pro.jpg}
 \end{center}
 \end{column}
 
@@ -55,7 +55,7 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgef1dcd9}]{Robót móvil tipo diferencial}
+\begin{frame}[label={sec:orgdaed7db}]{Robót móvil tipo diferencial}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -77,19 +77,17 @@
 
 \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
 
-LLamado modelo \alert{diferencial} (\emph{differential drive})
 
 \pause
 
-\alert{Actividad} ¿Es posible alcanzar cualquier punto en el espacio de estados \(\begin{bmatrix} x &  y & \theta \end{bmatrix}^T\) con una señal de entrada \(u(t)\) bien diseñada?
+\alert{Actividad} En simulink
 \end{column}
 \end{columns}
 \end{frame}
 
 
 
-
-\begin{frame}[label={sec:orgf806687}]{El modelo uniciclo}
+\begin{frame}[label={sec:orgacc7098}]{El modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -118,13 +116,13 @@ LLamado modelo \alert{diferencial} (\emph{differential drive})
 \end{frame}
 
 
-\begin{frame}[label={sec:orga89f409}]{Implementación de la cinemática inversa}
+\begin{frame}[label={sec:orge03ac13}]{Implementación de la cinemática inversa}
 \end{frame}
 
 \section{Control en lazo abierto}
-\label{sec:orge3fe3e6}
+\label{sec:org08a6a61}
 
-\begin{frame}[label={sec:org3701b17}]{Control en lazo abierto}
+\begin{frame}[label={sec:org657d987}]{Control en lazo abierto}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -153,7 +151,7 @@ Dibuje la señal de entrada que
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org87fa774}]{Implementación del control en lazo abierto}
+\begin{frame}[label={sec:org3a1ae57}]{Implementación del control en lazo abierto}
 Simulink
 \end{frame}
 \end{document}

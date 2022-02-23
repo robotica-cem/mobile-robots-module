@@ -68,7 +68,7 @@
 
 #+BEAMER: \pause
 
-*Dinámica*
+*Cinemática*
 
     \[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
 
@@ -125,6 +125,9 @@
 
    
 ** Implementación de la cinemática inversa
+
+En simulink/matlab
+
 
 * Control en lazo abierto
 
