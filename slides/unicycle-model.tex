@@ -1,4 +1,4 @@
-% Created 2022-02-12 Sat 17:47
+% Created 2022-02-23 Wed 10:08
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -21,10 +21,10 @@
 \usetheme{default}
 \author{Kjartan Halvorsen}
 \date{\today}
-\title{The unicycle model}
+\title{Robot móvil tipo uniciclo}
 \hypersetup{
  pdfauthor={Kjartan Halvorsen},
- pdftitle={The unicycle model},
+ pdftitle={Robot móvil tipo uniciclo},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 26.3 (Org mode 9.4.6)}, 
@@ -34,9 +34,28 @@
 \maketitle
 
 \section{Mobile robot unicycle model}
-\label{sec:org9072577}
+\label{sec:org753b547}
 
-\begin{frame}[label={sec:org381172e}]{The unicycle model}
+\begin{frame}[label={sec:org45ff32d}]{Robót móvil - modelo uniciclo}
+\begin{columns}
+\begin{column}{0.4\columnwidth}
+\begin{center}
+ \includegraphics[width=.3\linewidth]{../figures/X80Pro.jpg}
+\end{center}
+\end{column}
+
+
+
+
+\begin{column}{0.4\columnwidth}
+\begin{center}
+ \includegraphics[width=1.0\linewidth]{../figures/unicycle_annotated.png}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:orgef1dcd9}]{Robót móvil tipo diferencial}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -50,46 +69,91 @@
 \begin{column}{0.6\columnwidth}
 \pause
 
+\alert{Dinámica}
+
 \[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
 
 
 
 \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
 
-Called unicycle model.
+LLamado modelo \alert{diferencial} (\emph{differential drive})
+
 \pause
 
-\alert{Activity} Can we reach any point in state space \(\begin{bmatrix} x &  y & \theta \end{bmatrix}^T\) by a suitably designed input signal sequence \(u(t)\)?
+\alert{Actividad} ¿Es posible alcanzar cualquier punto en el espacio de estados \(\begin{bmatrix} x &  y & \theta \end{bmatrix}^T\) con una señal de entrada \(u(t)\) bien diseñada?
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgc902816}]{The unicycle model}
-\small 
+
+
+
+\begin{frame}[label={sec:orgf806687}]{El modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
- \includegraphics[width=1.0\linewidth]{../figures/unicycle-model-op}
+ \includegraphics[width=1.0\linewidth]{../figures/unicycle-model-details}
 \end{center}
-
-\[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
 \end{column}
+
 \begin{column}{0.6\columnwidth}
-Linearized model using deviation variables
-\[ \xi(t) = \xi_0 + z(t), \quad \frac{d}{dt} \xi = \frac{d}{dt} z\]
-\[ \frac{d}{dt} z = \begin{bmatrix} \omega\\ v\cos\theta_0 \\ v\sin\theta_0 \end{bmatrix}
-= \underbrace{0}_{A} z + \underbrace{\begin{bmatrix} 1 & 0 \\ 0 & 0\\ 0 & 1\end{bmatrix}}_{B} \begin{bmatrix}\omega\\v\end{bmatrix} \]
+\alert{Cinemática}
 
 \pause
 
-\begin{align*} \mathcal{C} &= \begin{bmatrix} B & AB & A^2B \end{bmatrix}\\
-&= \begin{bmatrix} 1 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 0\\ 0 & 1 & 0 & 0 & 0 & 0\end{bmatrix}
-\end{align*}
+\alert{Actividad} Determine
 
-\pause
+\begin{enumerate}
+\item La velocidad lineal (\(v_R\), \(v_L\)) de cada rueda dado su velocidad angular (\(\omega_R\), \(\omega_L\))
 
-\alert{Activity} Is the linearized model controllable? (Hint: What is \(\text{rank}\, \mathcal{C}\)?)
+\item La velocidad lineal \(v\) del centro robot dado las dos velocidades \(v_R\) y \(v_L\)
+
+\item La velocidad angular \(\omega\) del robot dado las dos velocidades \(v_R\) y \(v_L\)
+
+\item Las relaciones invertidas. Es decir, las velocidades angulares \(\omega_R\) y \(\omega_L\) de los ruedos dado las velocidades \(v\) y \(\omega\).
+\end{enumerate}
 \end{column}
 \end{columns}
+\end{frame}
+
+
+\begin{frame}[label={sec:orga89f409}]{Implementación de la cinemática inversa}
+\end{frame}
+
+\section{Control en lazo abierto}
+\label{sec:orge3fe3e6}
+
+\begin{frame}[label={sec:org3701b17}]{Control en lazo abierto}
+\begin{columns}
+\begin{column}{0.4\columnwidth}
+\begin{center}
+ \includegraphics[width=1.0\linewidth]{../figures/unicycle-model}
+\end{center}
+\end{column}
+
+\begin{column}{0.6\columnwidth}
+\pause
+
+Queremos manejar el robot de un estado inicial a otro estando. Es decir eligir una señal de entrada
+$$ u(t) = \begin{bmatrix} v(t)\\\omega_t \end{bmatrix}, \; t \in [0,\, t_1) $$
+que mueve el robot de una posición y orientación inicial (\(x(0)\), \(y(0)\), \(\theta(0)\)) a otra posición y orientación en \(t_1\) segundos.
+
+\pause
+
+\alert{Actividad}
+
+Dibuje la señal de entrada que 
+\begin{enumerate}
+\item mueve el robot una distancia 1m derecho en 3 segundos.
+\item cambia la dirección del robot 90 grados hacia izquierda.
+\item que mueve el robot en una trayectoria de forma cuadrada con lados de 1 metros en 20 segundos.
+\end{enumerate}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:org87fa774}]{Implementación del control en lazo abierto}
+Simulink
 \end{frame}
 \end{document}

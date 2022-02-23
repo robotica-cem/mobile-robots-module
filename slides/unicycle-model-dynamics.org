@@ -12,21 +12,21 @@
 #+LaTex_HEADER: \newcommand*{\ctrb}{\EuScript{C}}
 #+LaTex_HEADER: \newcommand*{\obsv}{\EuScript{O}}
 
-#+title:  The unicycle model
+#+title:  Robot móvil tipo uniciclo
 # #+date: 2018-04-05
 
 * What do I want the students to understand?			   :noexport:
 - The dynamics of the unicycle model
+- Feedback control
 
 * Activities                                                       :noexport:
-- Program function that takes linear and angular velocity in SI measurements as input  and
-  computes the velocity of each wheel.
-- Implement open-loop control to move roverbot in square.
+- Implement dead reckoning
+- Implement go to point and go to pose
   
 
 * Mobile robot unicycle model
 
-** The unicycle model
+** El modelo uniciclo
 *** Graphics
 :PROPERTIES:
 :BEAMER_col: 0.4
@@ -46,98 +46,16 @@
 
 #+BEAMER: \pause
 
+*Dinámica*
+
     \[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
-
-
-
     \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
 
-    Called unicycle model.
-#+BEAMER: \pause
-
-*Activity* Can we reach any point in state space \(\begin{bmatrix} x &  y & \theta \end{bmatrix}^T\) by a suitably designed input signal sequence $u(t)$?
-
-** The unicycle model
-
-\small 
-*** Graphics
-:PROPERTIES:
-:BEAMER_col: 0.4
-:END:
-
-    \begin{center}
-     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model-op}
-    \end{center}
-
-    \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
-*** Text
-:PROPERTIES:
-:BEAMER_col: 0.6
-:END:
-
-Linearized model using deviation variables
-\[ \xi(t) = \xi_0 + z(t), \quad \frac{d}{dt} \xi = \frac{d}{dt} z\]
-\[ \frac{d}{dt} z = \begin{bmatrix} \omega\\ v\cos\theta_0 \\ v\sin\theta_0 \end{bmatrix}
-= \underbrace{0}_{A} z + \underbrace{\begin{bmatrix} 1 & 0 \\ 0 & 0\\ 0 & 1\end{bmatrix}}_{B} \begin{bmatrix}\omega\\v\end{bmatrix} \]
-
-#+BEAMER: \pause
-
-\begin{align*} \mathcal{C} &= \begin{bmatrix} B & AB & A^2B \end{bmatrix}\\
-&= \begin{bmatrix} 1 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 0 & 0\\ 0 & 1 & 0 & 0 & 0 & 0\end{bmatrix}
-\end{align*}
-
-#+BEAMER: \pause
-
-*Activity* Is the linearized model controllable? (Hint: What is \(\text{rank}\, \mathcal{C}\)?)
-
-
-* Observability                                                    :noexport:
-
-** The unicycle model - bearing measurement
-
-*** Graphics
-:PROPERTIES:
-:BEAMER_col: 0.4
-:END:
-
-Single bearing measurement.
-
-    \begin{center}
-     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model-bearing}
-    \end{center}
-*** Text
-:PROPERTIES:
-:BEAMER_col: 0.6
-:END:
-
-\[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix}\]
-
-#+BEAMER: \pause
-
-*Activity* Is the system observable with one bearing-only measurement?
-
-
-** The unicycle model - bearing and distance masurement
-
-*** Graphics
-:PROPERTIES:
-:BEAMER_col: 0.4
-:END:
-
-
-    \begin{center}
-     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model-bearing-distance}
-    \end{center}
-*** Text
-:PROPERTIES:
-:BEAMER_col: 0.6
-:END:
-
-\[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix}\]
-
 #+BEAMER: \pause
 
 
-*Activity* Is the system observable with one bearing and one distance measurement?
+*Actividad* 
+
+
 
 
