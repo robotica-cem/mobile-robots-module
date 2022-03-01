@@ -26,7 +26,7 @@
 
 * Mobile robot unicycle model
 
-** Robót móvil - modelo uniciclo
+** Robot móvil  
 *** Graphics
 :PROPERTIES:
 :BEAMER_col: 0.4
@@ -48,7 +48,7 @@
      \includegraphics[width=1.0\linewidth]{../figures/unicycle_annotated.png}
     \end{center}
 
-** Robót móvil tipo diferencial
+** Robot móvil - modelo uniciclo
 *** Graphics
 :PROPERTIES:
 :BEAMER_col: 0.4
@@ -93,7 +93,7 @@
 
 
 
-** El modelo uniciclo
+** Diferencial a modelo uniciclo
 *** Graphics
 :PROPERTIES:
 :BEAMER_col: 0.4
