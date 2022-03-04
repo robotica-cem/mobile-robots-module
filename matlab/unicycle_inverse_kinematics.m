@@ -13,12 +13,21 @@ function wangvel = unicycle_inverse_kinematics(u)
 % wangvel(2) : The right wheel angular velocity in rad/s
 
 
-if nargin == 0:
+if nargin == 0
     run_unit_tests()
     return
 end
 
+v = u(1);
+w = u(2);
+d = u(3);
+r = u(4);
 
+wR = (v + w*d/2)/r;
+wL = (v - w*d/2)/r;
+
+
+wangvel = [wL;wR];
 % Your implementation here
 
 
@@ -42,7 +51,7 @@ u = [v
     r];
 
 wLwR = unicycle_inverse_kinematics(u);
-assert(wLwR(1) == wLwR(2), 'The velocities should be equal')
+assert(abs(wLwR(1)-wLwR(2)) < 1e-10, 'The velocities should be equal')
 
 % Angular velocity only should give same angular velocity but of
 % opposite sign for the two wheels
