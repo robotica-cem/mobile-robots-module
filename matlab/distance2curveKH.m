@@ -1,3 +1,7 @@
 function d = distance2curveKH(curvexyandu)
 
-[xy, d] = distance2curve(curvexyandu(:,1:end-2)', curvexyandu(:,end-1:end)', 'spline');
+sensorpos = curvexyandu(:,1:2)';
+curvexy = curvexyandu(:,3:end)';
+
+
+[xy, d] = distance2curve(curvexy, sensorpos, 'spline');
