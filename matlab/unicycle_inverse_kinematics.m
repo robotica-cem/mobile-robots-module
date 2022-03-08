@@ -24,7 +24,7 @@ d = u(3);
 r = u(4);
 
 wR = (v + w*d/2)/r;
-wL = (v - w*d/2)/r;
+wL = (v - (w*d/2))/r;
 
 
 wangvel = [wL;wR];
