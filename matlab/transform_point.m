@@ -27,7 +27,10 @@ ps = u(4:5);
 
 
 % Your implementation here
-
+v_s = ps - xy;
+R_bs = [cos(th) sin(th); -sin(th) cos(th)];
+v_b = R_bs*v_s;
+pb = v_b;
 
 end
 
