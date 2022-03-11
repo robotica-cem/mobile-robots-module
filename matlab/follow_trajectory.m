@@ -49,6 +49,11 @@ end
     
 % TODO: Transform points to robot-centric frame
 %waypoints_b = 
+Rbs = [cos(th), sin(th)
+    -sin(th), cos(th)];
+vwp_s = waypoints - [x;y];
+waypoints_b = Rbs *vwp_s;
+
 
 if currentWP == nwp
     % Current waypoint is goal. Go to point
@@ -61,6 +66,18 @@ else
     
     % TODO: Steer according to the pure pursuit algorithm. Change
     % waypoint if needed.
+    if isnan(beta)
+        y = go_to_point(cwp, vd);
+    else
+    
+        if beta > 1
+        
+        else
+            
+        end
+    end
+    
+    
 end
 end % function
 
@@ -155,9 +172,19 @@ function [pg, beta] = find_goal_point(p1, p2, l)
     end
   
     v = p2-p1;
+    a = v'*v;
+    b = 2*v'*p1;
+    c = p1'*p1 - l^2;
     
-    beta = 0;
-    pg = [0;0];
+    sqrtpart = 1/(2*a)*sqrt(b^2 -4*a*c)
+    if isreal(sqrtpart)
+        beta = -b/(2*a) + sqrtpart;
+        pg = p1 + beta*v;
+    else
+        beta = nan;
+        pg = p1; 
+    end
+    
     
 end
     
