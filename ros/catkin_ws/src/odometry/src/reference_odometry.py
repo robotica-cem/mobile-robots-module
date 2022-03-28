@@ -7,7 +7,7 @@ import rospy
 import tf2_ros
 from tf import transformations as trf
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Transform,Pose,PoseWithCovariance,Twist,TwistWithCovariance
+from geometry_msgs.msg import Vector3,Transform,TransformStamped,Pose,PoseStamped,PoseWithCovariance,Twist,TwistWithCovariance
 from gazebo_msgs.msg import ModelState,ModelStates
 
 
@@ -76,7 +76,7 @@ def transform_vector(t, v1, inverse=False):
     https://answers.ros.org/question/196149/how-to-rotate-vector-by-quaternion-in-python/
     """
 
-    q1 = t.rotation
+    q1 = [t.rotation.x, t.rotation.y, t.rotation.z, t.rotation.w] 
     q2 = list(v1)
     q2.append(0.0)
     if inverse:
@@ -99,69 +99,79 @@ class OdometryPublisher():
         # Subscribe to the model_states topic to obtain the position and heading of the puzzlebot
         rospy.Subscriber("gazebo/model_states", ModelStates, self.callback)
         # Publish the bot pose to a topic
-        self.odom_pub = rospy.Publisher("/true_odometry", Odometry)
+        self.odom_pub = rospy.Publisher("/true_odometry", Odometry, queue_size=1)
         
         self.model_state = None
         self.model_twist = None
         self.initial_state = None
-        self.bot_pose = PoseStamped()
 
         # For broadcasting transform from base_link to odom_true 
         self.br = tf2_ros.TransformBroadcaster() 
         # For broadcasting the static transform from odom_true to world
         self.brStatic = tf2_ros.StaticTransformBroadcaster()
 
+        self.rate = rospy.Rate(20)
+        
+
     def main(self):
 
         # If there's an object attached to the ee we want it to follow its trajectory
         while not rospy.is_shutdown():
+            self.rate.sleep()
             if self.initial_state is None:
                 if self.model_state is not None:
                     # Get the initial pose 
-                    t = PoseStamped()
+                    t = TransformStamped()
                     t.header.stamp = rospy.Time.now()
                     t.header.frame_id = "world"
-                    t.child_frame_id = "odom_true"
-                    t.transform.translation = self.model_state.pose.position
-                    t.transform.rotation = self.model_state.pose.orientation
-                    self.initial_state = t
+                    t.transform.translation = self.model_state.position
+                    t.transform.rotation = self.model_state.orientation
                     self.brStatic.sendTransform(t)
-            if self.model_state is not None:
-                # Publish the state of the puzzlebot
-                t = TransformStamped()
-                t.header.stamp = rospy.Time.now()
-                t.header.frame_id = "odom_true"
-                t.child_frame_id = "base_link"
+                    self.initial_state = PoseStamped()
+                    self.initial_state.header = t.header
+                    self.initial_state.pose.position = t.transform.translation
+                    self.initial_state.pose.orientation = t.transform.rotation
+                    print("Set the initial state")
+                    print(self.model_state)
+                    
+            else:
+                if self.model_state is not None:
+                    # Publish the state of the puzzlebot
+                    t = TransformStamped()
+                    t.header.stamp = rospy.Time.now()
+                    t.header.frame_id = "odom_true"
+                    t.child_frame_id = "base_link"
 
-                tt = transform_between_poses(self.initial_state, self.model_state)
-
-                t.transform.translation = tt.translation
-                t.transform.rotation = tt.rotation
-                self.br.sendTransform(t)
-
-                # Publish the odometry message
-                odom = Odometry()
-                odom.header.stamp = t.header.stamp
-                odom.header.frame_id = "odom_true"
-                # Set the position
-                odom.pose.pose = Pose(t.transform.translation, t.transform.rotation)
-                # Set the velocity
-                odom.child_frame_id = "base_link"
-                vs = self.model_twist.linear # Velocity of puzzlebot in world frame
-                tr = Transform()
-                tr.rotation = self.model_state.orientation
-                vb = transform_vector(tr, vs, inverse=True) # Transform to base_link frame
-                odom.twist.twist = Twist(Vector3(*vb), Vector3(0,0,this.model_twist.angular[2])
-
-                # publish the message
-                self.odom_pub.publish(odom)
+                    tt = transform_between_poses(self.initial_state.pose, self.model_state)
+                    
+                    t.transform.translation = tt.translation
+                    t.transform.rotation = tt.rotation
+                    self.br.sendTransform(t)
+                    
+                    # Publish the odometry message
+                    odom = Odometry()
+                    odom.header.stamp = t.header.stamp
+                    odom.header.frame_id = "odom_true"
+                    # Set the position
+                    odom.pose.pose = Pose(t.transform.translation, t.transform.rotation)
+                    # Set the velocity
+                    odom.child_frame_id = "base_link"
+                    vs = self.model_twist.linear # Velocity of puzzlebot in world frame
+                    tr = Transform()
+                    tr.rotation = self.model_state.orientation
+                    vb = transform_vector(tr, (vs.x, vs.y, vs.z), inverse=True)
+                    # Transform to base_link frame
+                    odom.twist.twist = Twist(Vector3(*vb), Vector3(0,0,self.model_twist.angular.z))
+                    
+                    # publish the message
+                    self.odom_pub.publish(odom)
 
                 
     def callback(self, data):
         aux_idx = data.name.index('puzzlebot')
 
-        self.model_state = data.pose[ux_idx]
-        self.model_twist = data.twist[ux_idx]
+        self.model_state = data.pose[aux_idx]
+        self.model_twist = data.twist[aux_idx]
         
 if __name__ == '__main__':
 
