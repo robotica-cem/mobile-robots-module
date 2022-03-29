@@ -624,7 +624,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>15.8924 -13.9538 7.03661 0 0.275643 2.35619</pose>
+        <pose frame=''>0 0 25 0 1.5707 0</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
