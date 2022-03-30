@@ -1,4 +1,4 @@
-% Created 2022-03-01 Tue 07:17
+% Created 2022-03-30 Wed 14:10
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -21,10 +21,10 @@
 \usetheme{default}
 \author{Kjartan Halvorsen}
 \date{\today}
-\title{Robot móvil tipo uniciclo}
+\title{El modelo canónical de robots móviles no-holonómicos}
 \hypersetup{
  pdfauthor={Kjartan Halvorsen},
- pdftitle={Robot móvil tipo uniciclo},
+ pdftitle={El modelo canónical de robots móviles no-holonómicos},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 26.3 (Org mode 9.4.6)}, 
@@ -33,29 +33,29 @@
 
 \maketitle
 
-\section{Mobile robot unicycle model}
-\label{sec:orgfd83bbd}
+\section{Mobile robots}
+\label{sec:org2c2f45a}
 
-\begin{frame}[label={sec:org091a4ba}]{Robót móvil}
-\begin{columns}
-\begin{column}{0.4\columnwidth}
+\begin{frame}[label={sec:orge6b4bd1}]{Modelo canónical a.k.a modelo uniciclo}
 \begin{center}
- \includegraphics[width=.8\linewidth]{../figures/X80Pro.jpg}
+ \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
 \end{center}
-\end{column}
 
-
-
-
-\begin{column}{0.4\columnwidth}
-\begin{center}
- \includegraphics[width=1.0\linewidth]{../figures/unicycle_annotated.png}
-\end{center}
-\end{column}
-\end{columns}
+\footnotesize
+From Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots with prescribed performance guarantees}. KTH - Royal Institute of Technology, Sweden.
 \end{frame}
 
-\begin{frame}[label={sec:orga452f6c}]{Robót móvil tipo diferencial}
+
+
+\begin{frame}[label={sec:orgd8245f0}]{Robot tipo diferencial (\emph{differential drive})}
+\begin{center}
+ \includegraphics[width=.5\linewidth]{../figures/X80Pro.jpg}
+\end{center}
+
+X80Pro Dr. Robot Inc.
+\end{frame}
+
+\begin{frame}[label={sec:orgd4c7659}]{Robot móvil - modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -87,7 +87,7 @@
 
 
 
-\begin{frame}[label={sec:org2bf68b7}]{El modelo uniciclo}
+\begin{frame}[label={sec:org072d854}]{Diferencial a modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -116,15 +116,15 @@
 \end{frame}
 
 
-\begin{frame}[label={sec:org283db1f}]{Implementación de la cinemática inversa}
+\begin{frame}[label={sec:orgdc1e46c}]{Implementación de la cinemática inversa}
 En simulink/matlab
 \end{frame}
 
 
 \section{Control en lazo abierto}
-\label{sec:org2a1d956}
+\label{sec:org68a6a7f}
 
-\begin{frame}[label={sec:orgfcb6850}]{Control en lazo abierto}
+\begin{frame}[label={sec:org32398d8}]{Control en lazo abierto}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -153,7 +153,7 @@ Dibuje la señal de entrada que
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org67b598f}]{Implementación del control en lazo abierto}
+\begin{frame}[label={sec:org135b66b}]{Implementación del control en lazo abierto}
 Simulink
 \end{frame}
 \end{document}

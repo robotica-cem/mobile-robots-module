@@ -12,41 +12,18 @@
 #+LaTex_HEADER: \newcommand*{\ctrb}{\EuScript{C}}
 #+LaTex_HEADER: \newcommand*{\obsv}{\EuScript{O}}
 
-#+title:  Robot móvil tipo uniciclo
+#+title:  Odometría
 # #+date: 2018-04-05
 
 * What do I want the students to understand?			   :noexport:
-- The dynamics of the unicycle model
+- How to calculate odometry for differential drive robots
 
 * Activities                                                       :noexport:
-- Program function that takes linear and angular velocity in SI measurements as input  and
-  computes the velocity of each wheel.
-- Implement open-loop control to move roverbot in square.
-  
-
-* Mobile robot unicycle model
-
-** Robot móvil  
-*** Graphics
-:PROPERTIES:
-:BEAMER_col: 0.4
-:END:
-
-    \begin{center}
-     \includegraphics[width=.8\linewidth]{../figures/X80Pro.jpg}
-    \end{center}
+- Apply Euler's method
+- Programming exercises
 
 
-
-
-*** Graphics
-:PROPERTIES:
-:BEAMER_col: 0.4
-:END:
-
-    \begin{center}
-     \includegraphics[width=1.0\linewidth]{../figures/unicycle_annotated.png}
-    \end{center}
+* Differential drive
 
 ** Robot móvil - modelo uniciclo
 *** Graphics
@@ -77,9 +54,9 @@
     \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
 
     
-#+BEAMER: \pause
+# #+BEAMER: \pause
 
-*Actividad* En simulink
+# *Actividad* En simulink
 
 *** Notes                                                          :noexport:
 - Add three integrators, label
@@ -93,7 +70,7 @@
 
 
 
-** Diferencial a modelo uniciclo
+** Integrando el modelo cinemático
 *** Graphics
 :PROPERTIES:
 :BEAMER_col: 0.4
@@ -124,53 +101,3 @@
 4) Las relaciones invertidas. Es decir, las velocidades angulares $\omega_R$ y $\omega_L$ de los ruedos dado las velocidades $v$ y $\omega$.
 
    
-** Implementación de la cinemática inversa
-
-En simulink/matlab
-
-
-* Control en lazo abierto
-
-** Control en lazo abierto
-
-*** Graphics
-:PROPERTIES:
-:BEAMER_col: 0.4
-:END:
-
-    \begin{center}
-     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model}
-    \end{center}
-
-*** Text
-:PROPERTIES:
-:BEAMER_col: 0.6
-:END:
-
-#+BEAMER: \pause
-
-Queremos manejar el robot de un estado inicial a otro estando. Es decir eligir una señal de entrada
-$$ u(t) = \begin{bmatrix} v(t)\\\omega_t \end{bmatrix}, \; t \in [0,\, t_1) $$
-que mueve el robot de una posición y orientación inicial ($x(0)$, $y(0)$, $\theta(0)$) a otra posición y orientación en $t_1$ segundos.
-
-#+BEAMER: \pause
-
-*Actividad*
-
-Dibuje la señal de entrada que 
-1) mueve el robot una distancia 1m derecho en 3 segundos.
-2) cambia la dirección del robot 90 grados hacia izquierda.
-3) que mueve el robot en una trayectoria de forma cuadrada con lados de 1 metros en 20 segundos.
-
-** Implementación del control en lazo abierto
-
-Simulink
-
-
-
-
-
-
-
-
-
