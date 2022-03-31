@@ -1,4 +1,4 @@
-% Created 2022-03-30 Wed 14:10
+% Created 2022-03-30 Wed 16:38
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -21,10 +21,10 @@
 \usetheme{default}
 \author{Kjartan Halvorsen}
 \date{\today}
-\title{El modelo canónical de robots móviles no-holonómicos}
+\title{El modelo canónico de robots móviles no-holonómicos}
 \hypersetup{
  pdfauthor={Kjartan Halvorsen},
- pdftitle={El modelo canónical de robots móviles no-holonómicos},
+ pdftitle={El modelo canónico de robots móviles no-holonómicos},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 26.3 (Org mode 9.4.6)}, 
@@ -34,20 +34,22 @@
 \maketitle
 
 \section{Mobile robots}
-\label{sec:org2c2f45a}
+\label{sec:orgb4c78bb}
 
-\begin{frame}[label={sec:orge6b4bd1}]{Modelo canónical a.k.a modelo uniciclo}
+\begin{frame}[label={sec:orgfc6503f}]{Modelo canónico a.k.a modelo uniciclo}
 \begin{center}
  \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
 \end{center}
 
 \footnotesize
-From Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots with prescribed performance guarantees}. KTH - Royal Institute of Technology, Sweden.
+De Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots with prescribed performance guarantees}. KTH - Royal Institute of Technology, Sweden.
 \end{frame}
 
 
+\section{Differential drive}
+\label{sec:org9c556a4}
 
-\begin{frame}[label={sec:orgd8245f0}]{Robot tipo diferencial (\emph{differential drive})}
+\begin{frame}[label={sec:org093d6a7}]{Robot tipo diferencial (\emph{differential drive})}
 \begin{center}
  \includegraphics[width=.5\linewidth]{../figures/X80Pro.jpg}
 \end{center}
@@ -55,7 +57,7 @@ From Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots w
 X80Pro Dr. Robot Inc.
 \end{frame}
 
-\begin{frame}[label={sec:orgd4c7659}]{Robot móvil - modelo uniciclo}
+\begin{frame}[label={sec:org3489ce1}]{Robot móvil - modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -76,18 +78,13 @@ X80Pro Dr. Robot Inc.
 
 
 \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
-
-
-\pause
-
-\alert{Actividad} En simulink
 \end{column}
 \end{columns}
 \end{frame}
 
 
 
-\begin{frame}[label={sec:org072d854}]{Diferencial a modelo uniciclo}
+\begin{frame}[label={sec:orga45f18e}]{Diferencial a modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -96,8 +93,6 @@ X80Pro Dr. Robot Inc.
 \end{column}
 
 \begin{column}{0.6\columnwidth}
-\alert{Cinemática}
-
 \pause
 
 \alert{Actividad} Determine
@@ -116,44 +111,91 @@ X80Pro Dr. Robot Inc.
 \end{frame}
 
 
-\begin{frame}[label={sec:orgdc1e46c}]{Implementación de la cinemática inversa}
-En simulink/matlab
-\end{frame}
-
-
-\section{Control en lazo abierto}
-\label{sec:org68a6a7f}
-
-\begin{frame}[label={sec:org32398d8}]{Control en lazo abierto}
+\begin{frame}[label={sec:org7af4ead}]{Diferencial a modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
- \includegraphics[width=1.0\linewidth]{../figures/unicycle-model}
+ \includegraphics[width=.8\linewidth]{../figures/unicycle-model-details}
+\end{center}
+\end{column}
+
+\begin{column}{0.6\columnwidth}
+Asumiendo simetría entre las dos ruedas y en la dirección de giro.
+
+\[ \omega_L,\, \omega_R \; \in \; [-\omega_{max}, \omega_{max}]\]
+
+\pause
+
+\alert{Actividad}
+Dibuje la región de posibles valores de la señal de entrada al modelo canónico,
+\[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
+dado los límites de la velocidad angular de las ruedas.
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[label={sec:org4f686c1}]{Implementación}
+Notebook en google colab (página en Canvas)
+\end{frame}
+
+
+\section{Car-like}
+\label{sec:org2cd4728}
+
+\begin{frame}[label={sec:org1421399}]{Robots tipo coche - modelo bicicleta}
+\begin{columns}
+\begin{column}{0.4\columnwidth}
+\begin{center}
+ \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
 \end{center}
 \end{column}
 
 \begin{column}{0.6\columnwidth}
 \pause
 
-Queremos manejar el robot de un estado inicial a otro estando. Es decir eligir una señal de entrada
-$$ u(t) = \begin{bmatrix} v(t)\\\omega_t \end{bmatrix}, \; t \in [0,\, t_1) $$
-que mueve el robot de una posición y orientación inicial (\(x(0)\), \(y(0)\), \(\theta(0)\)) a otra posición y orientación en \(t_1\) segundos.
+Para un robot que se mueve instantaneamente en una trayectoria círcular con radie \(R\), la relación entre la velocidad lineal \(v\) y la velocidad angular \(\omega\) es
 
 \pause
 
-\alert{Actividad}
+\[ v = R\omega \quad \Rightleftarrow \quad \omega = \frac{1}{R} v \]
 
-Dibuje la señal de entrada que 
-\begin{enumerate}
-\item mueve el robot una distancia 1m derecho en 3 segundos.
-\item cambia la dirección del robot 90 grados hacia izquierda.
-\item que mueve el robot en una trayectoria de forma cuadrada con lados de 1 metros en 20 segundos.
-\end{enumerate}
+\pause
+\alert{Actividad} Determine el radie de giro instantaneo \(R\) como función del ángulo de dirección \(\phi\).
+
+\pause
+\alert{Actividad} Determine la velocidad angular \(\omega\) como función de la velocidad \(v\) y del ángulo de dirección \(\phi\). Determine también la función inversa.
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org135b66b}]{Implementación del control en lazo abierto}
-Simulink
+
+
+
+\begin{frame}[label={sec:orgbd0ef99}]{Robots tipo coche - modelo bicicleta}
+\begin{columns}
+\begin{column}{0.4\columnwidth}
+\begin{center}
+ \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
+\end{center}
+\end{column}
+
+\begin{column}{0.6\columnwidth}
+Para cierto robot
+\[ v \in [-v_{lm}, v_{um}], \quad \phi \in [-\phi_{max}, \phi_{max}]\]
+
+
+\pause
+
+\alert{Actividad} Dibuje la región de posibles valores de la señal de entrada al modelo canónico,
+\[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
+dado los límites de la velocidad \(v\) y del ángulo de dirección \(\phi\).
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[label={sec:orgaf693a2}]{Implementación}
+Notebook en google colab (página en Canvas)
 \end{frame}
 \end{document}

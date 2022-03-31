@@ -25,7 +25,7 @@
 
 * Differential drive
 
-** Robot móvil - modelo uniciclo
+** Robot móvil - modelo canónico
 *** Graphics
 :PROPERTIES:
 :BEAMER_col: 0.4
@@ -45,7 +45,6 @@
 
 #+BEAMER: \pause
 
-*Cinemática*
 
     \[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
 
@@ -53,20 +52,16 @@
 
     \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
 
-    
-# #+BEAMER: \pause
+** El método de Euler para integración numérica
 
-# *Actividad* En simulink
+Dado ecuación diferencial (posiblemente no-lineal y variante en el tiempo)
+\[ \frac{d}{dt} y = f(y,t, u) \]
+y valor inicial \(y(t_k) = y_k\),
+el valor de la función \(y(t_{k+1}) = y(t_k + \Delta t)\) se puede estimar con
 
-*** Notes                                                          :noexport:
-- Add three integrators, label
-- Add XY-scope and regular scope
-- Link x and y to XY-scope, link theta to other scope
-- Add two sources for the control inputs \omega and v.
-- Leave the rest to the students.
-- Goal: Make robot move in circular of radius 2m, finishing the revolution in 10s
-  - Angular vel: \omega = 2*pi/10
-  - Linear vel: 2*pi*r/10
+\[\hat{y}(t_{k+1}) = y_k + \Delta t \;f\big(y_k, t_k, u(t_k)\big). \]
+
+
 
 
 
@@ -85,19 +80,13 @@
 :BEAMER_col: 0.6
 :END:
 
-
-*Cinemática*
+\[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
+\[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
 
 #+BEAMER: \pause
 
-*Actividad* Determine
+*Actividad* Aplica el método de Euler!
 
-1) La velocidad lineal ($v_R$, $v_L$) de cada rueda dado su velocidad angular ($\omega_R$, $\omega_L$)
-
-2) La velocidad lineal $v$ del centro robot dado las dos velocidades $v_R$ y $v_L$
-
-3) La velocidad angular $\omega$ del robot dado las dos velocidades $v_R$ y $v_L$
-
-4) Las relaciones invertidas. Es decir, las velocidades angulares $\omega_R$ y $\omega_L$ de los ruedos dado las velocidades $v$ y $\omega$.
+\[\hat{y}(t_{k+1}) = y_k + \Delta t \; f\big(y_k, t_k, u(t_k)\big). \]
 
    

@@ -12,7 +12,7 @@
 #+LaTex_HEADER: \newcommand*{\ctrb}{\EuScript{C}}
 #+LaTex_HEADER: \newcommand*{\obsv}{\EuScript{O}}
 
-#+title:  El modelo canónical de robots móviles no-holonómicos
+#+title:  El modelo canónico de robots móviles no-holonómicos
 # #+date: 2018-04-05
 
 * What do I want the students to understand?			   :noexport:
@@ -26,14 +26,14 @@
 
 * Mobile robots
 
-** Modelo canónical a.k.a modelo uniciclo
+** Modelo canónico a.k.a modelo uniciclo
 
     \begin{center}
      \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
     \end{center}
 
     \footnotesize
-    From Martina Zambelli (2013) /Posture regulation for unicycle-like robots with prescribed performance guarantees/. KTH - Royal Institute of Technology, Sweden.
+    De Martina Zambelli (2013) /Posture regulation for unicycle-like robots with prescribed performance guarantees/. KTH - Royal Institute of Technology, Sweden.
 
 
 * Differential drive
@@ -106,8 +106,6 @@
 :END:
 
 
-*Cinemática*
-
 #+BEAMER: \pause
 
 *Actividad* Determine
@@ -121,9 +119,37 @@
 4) Las relaciones invertidas. Es decir, las velocidades angulares $\omega_R$ y $\omega_L$ de los ruedos dado las velocidades $v$ y $\omega$.
 
    
-** Implementación 
+** Diferencial a modelo uniciclo
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
 
-En Canvas
+    \begin{center}
+     \includegraphics[width=.8\linewidth]{../figures/unicycle-model-details}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+
+Asumiendo simetría entre las dos ruedas y en la dirección de giro.
+
+\[ \omega_L,\, \omega_R \; \in \; [-\omega_{max}, \omega_{max}]\]
+
+#+BEAMER: \pause
+
+*Actividad*
+Dibuje la región de posibles valores de la señal de entrada al modelo canónico,
+\[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
+dado los límites de la velocidad angular de las ruedas.
+
+
+** Implementación
+
+Notebook en google colab (página en Canvas)
 
 
 * Car-like
@@ -135,7 +161,7 @@ En Canvas
 :END:
 
     \begin{center}
-     \includegraphics[width=1.0\linewidth]{../figures/bicycle-model}
+     \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
     \end{center}
 
 *** Text
@@ -145,17 +171,50 @@ En Canvas
 
 #+BEAMER: \pause
 
-*Cinemática*
+Para un robot que se mueve instantaneamente en una trayectoria círcular con radie $R$, la relación entre la velocidad lineal $v$ y la velocidad angular $\omega$ es
 
-    \[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
+#+BEAMER: \pause
+
+\[ v = R\omega \quad \Rightleftarrow \quad \omega = \frac{1}{R} v \]
+
+#+BEAMER: \pause
+*Actividad* Determine el radie de giro instantaneo $R$ como función del ángulo de dirección $\phi$.
+
+#+BEAMER: \pause
+*Actividad* Determine la velocidad angular $\omega$ como función de la velocidad $v$ y del ángulo de dirección $\phi$. Determine también la función inversa.
 
 
 
-    \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
 
-    
+** Robots tipo coche - modelo bicicleta
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+Para cierto robot
+\[ v \in [-v_{lm}, v_{um}], \quad \phi \in [-\phi_{max}, \phi_{max}]\]
 
 
+#+BEAMER: \pause
+
+*Actividad* Dibuje la región de posibles valores de la señal de entrada al modelo canónico,
+\[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
+dado los límites de la velocidad $v$ y del ángulo de dirección $\phi$.
+
+
+** Implementación
+
+Notebook en google colab (página en Canvas)
 
 
 * Control en lazo abierto                                          :noexport:
