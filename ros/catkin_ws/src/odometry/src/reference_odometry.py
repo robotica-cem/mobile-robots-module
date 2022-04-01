@@ -9,6 +9,7 @@ from tf import transformations as trf
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Vector3,Transform,TransformStamped,Pose,PoseStamped,PoseWithCovariance,Twist,TwistWithCovariance
 from gazebo_msgs.msg import ModelState,ModelStates
+from std_msgs.msg import Float64
 
 
 # Functions for convenience
@@ -100,6 +101,10 @@ class OdometryPublisher():
         rospy.Subscriber("gazebo/model_states", ModelStates, self.callback)
         # Publish the bot pose to a topic
         self.odom_pub = rospy.Publisher("/true_odometry", Odometry, queue_size=1)
+        # Publish the simpler state to separate topics
+        self.x_pub = rospy.Publisher("/bot_state/x", Float64, queue_size=1)
+        self.y_pub = rospy.Publisher("/bot_state/y", Float64, queue_size=1)
+        self.th_pub = rospy.Publisher("/bot_state/theta", Float64, queue_size=1)
         
         self.model_state = None
         self.model_twist = None
@@ -166,7 +171,13 @@ class OdometryPublisher():
                     # publish the message
                     self.odom_pub.publish(odom)
 
-                
+
+                    # Publish the state
+                    self.x_pub.publish(tt.translation.x)
+                    self.y_pub.publish(tt.translation.y)
+                    self.th_pub.publish(2*np.arccos(tt.rotation.w))
+                    
+                    
     def callback(self, data):
         aux_idx = data.name.index('puzzlebot')
 
