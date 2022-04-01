@@ -1,0 +1,51 @@
+\documentclass[margin=5mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf,tikz}
+
+\newcommand{\wheel}{%
+  \draw[fill, black!60] (-3mm, -1mm) rectangle (3mm, 1mm); }
+
+\newcommand{\robot}[2]{%
+  \pgfmathsetmacro{\L}{16}
+  \pgfmathsetmacro{\RR}{\L/tan(#2)}
+ \begin{scope}[xshift=8mm]
+  \node[anchor=center, rotate=#1, rectangle, rounded corners, draw, minimum width=26mm, minimum height=12mm] at (0,0) {};
+  \begin{scope}[xshift=8mm, yshift=0mm, rotate=#2]
+    \wheel
+    \draw[dashed,] (0, 0) to (20mm, 0);
+    \draw[dotted,] (0, 0) to (0, 40mm);
+  \end{scope}
+  \draw[dotted,] (8mm, 0) to (8mm, -4mm);
+  \draw[dotted,] (-8mm, 0) to (-8mm, -4mm);
+  \draw[<->, green!60!black] (-8mm, -3mm) -- node[below] {$L$} (8mm, -3mm);
+  \begin{scope}[xshift=-8mm, yshift=0mm]
+    \wheel
+    \draw[dotted,] (0, 0) to (0, 35mm);
+  \end{scope}
+  \draw[->, green!60!black] (24mm, 0mm) arc[radius=16mm, start angle=0, end angle=#2] node[pos=0.6, right] {$\phi$};
+\end{scope}
+  \draw[<->, green!60!black] (0, 0) -- node[left] {$R$} (0, \RR mm);
+  \draw[->, red!60!black] (-2mm, 4mm) arc[radius=4mm, start angle=90, end angle=270] node[pos=0.5, left] {$\omega$};
+  \draw[->, red!60!black] (0, 0) to (40mm, 0) node[below] {$v$};
+}
+
+  \begin{document}
+
+\begin{tikzpicture}[node distance=20mm, anchor=north]
+
+  \draw[->] (0,0) to (6cm, 0);
+  \draw[->] (0,0) to (0, 6cm);
+
+  \begin{scope}[xshift=3cm, yshift=3cm, rotate=20]
+    \robot{20}{30}
+  \end{scope}
+
+  \draw (3, 0) -- (3, -0.3) node[below, blue!60!black] {$x$};
+  \draw (0, 3) -- (-0.3, 3) node[left, blue!60!black] {$y$};
+
+  \draw[dashed] (3, 3) to (7, 3); 
+  \draw[->, blue!60!black] (6, 3) arc[radius=30mm, start angle=0, end angle=20] node[pos=0.5, right] {$\theta$};
+
+\end{tikzpicture}
+\end{document}

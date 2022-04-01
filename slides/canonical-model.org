@@ -12,7 +12,7 @@
 #+LaTex_HEADER: \newcommand*{\ctrb}{\EuScript{C}}
 #+LaTex_HEADER: \newcommand*{\obsv}{\EuScript{O}}
 
-#+title:  Robot móvil tipo uniciclo
+#+title:  El modelo canónico de robots móviles no-holonómicos
 # #+date: 2018-04-05
 
 * What do I want the students to understand?			   :noexport:
@@ -24,30 +24,27 @@
 - Implement open-loop control to move roverbot in square.
   
 
-* Mobile robot unicycle model
+* Mobile robots
 
-** Robot móvil  
-*** Graphics
-:PROPERTIES:
-:BEAMER_col: 0.4
-:END:
+** Modelo canónico a.k.a modelo uniciclo
 
     \begin{center}
-     \includegraphics[width=.8\linewidth]{../figures/X80Pro.jpg}
+     \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
     \end{center}
 
+    \footnotesize
+    De Martina Zambelli (2013) /Posture regulation for unicycle-like robots with prescribed performance guarantees/. KTH - Royal Institute of Technology, Sweden.
 
 
+* Differential drive
 
-*** Graphics
-:PROPERTIES:
-:BEAMER_col: 0.4
-:END:
-
+** Robot tipo diferencial (/differential drive/)
     \begin{center}
-     \includegraphics[width=1.0\linewidth]{../figures/unicycle_annotated.png}
+     \includegraphics[width=.5\linewidth]{../figures/X80Pro.jpg}
     \end{center}
 
+    X80Pro Dr. Robot Inc.
+    
 ** Robot móvil - modelo uniciclo
 *** Graphics
 :PROPERTIES:
@@ -77,9 +74,9 @@
     \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
 
     
-#+BEAMER: \pause
+# #+BEAMER: \pause
 
-*Actividad* En simulink
+# *Actividad* En simulink
 
 *** Notes                                                          :noexport:
 - Add three integrators, label
@@ -109,8 +106,6 @@
 :END:
 
 
-*Cinemática*
-
 #+BEAMER: \pause
 
 *Actividad* Determine
@@ -124,12 +119,105 @@
 4) Las relaciones invertidas. Es decir, las velocidades angulares $\omega_R$ y $\omega_L$ de los ruedos dado las velocidades $v$ y $\omega$.
 
    
-** Implementación de la cinemática inversa
+** Diferencial a modelo uniciclo
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
 
-En simulink/matlab
+    \begin{center}
+     \includegraphics[width=.8\linewidth]{../figures/unicycle-model-details}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
 
 
-* Control en lazo abierto
+Asumiendo simetría entre las dos ruedas y en la dirección de giro.
+
+\[ \omega_L,\, \omega_R \; \in \; [-\omega_{max}, \omega_{max}]\]
+
+#+BEAMER: \pause
+
+*Actividad*
+Dibuje la región de posibles valores de la señal de entrada al modelo canónico,
+\[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
+dado los límites de la velocidad angular de las ruedas.
+
+
+** Implementación
+
+Notebook en google colab (página en Canvas)
+
+
+* Car-like
+
+** Robots tipo coche - modelo bicicleta
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+#+BEAMER: \pause
+
+Para un robot que se mueve instantaneamente en una trayectoria círcular con radie $R$, la relación entre la velocidad lineal $v$ y la velocidad angular $\omega$ es
+
+#+BEAMER: \pause
+
+\[ v = R\omega \quad \Rightleftarrow \quad \omega = \frac{1}{R} v \]
+
+#+BEAMER: \pause
+*Actividad* Determine el radie de giro instantaneo $R$ como función del ángulo de dirección $\phi$.
+
+#+BEAMER: \pause
+*Actividad* Determine la velocidad angular $\omega$ como función de la velocidad $v$ y del ángulo de dirección $\phi$. Determine también la función inversa.
+
+
+
+
+** Robots tipo coche - modelo bicicleta
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+Para cierto robot
+\[ v \in [-v_{lm}, v_{um}], \quad \phi \in [-\phi_{max}, \phi_{max}]\]
+
+
+#+BEAMER: \pause
+
+*Actividad* Dibuje la región de posibles valores de la señal de entrada al modelo canónico,
+\[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
+dado los límites de la velocidad $v$ y del ángulo de dirección $\phi$.
+
+
+** Implementación
+
+Notebook en google colab (página en Canvas)
+
+
+* Control en lazo abierto                                          :noexport:
 
 ** Control en lazo abierto
 

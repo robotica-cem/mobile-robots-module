@@ -1,0 +1,92 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169]
+#+OPTIONS: H:2
+# #+BEAMER_THEME: Madrid
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+     
+#+LaTex_HEADER: \usepackage{khpreamble, euscript}
+#+LaTex_HEADER: \DeclareMathOperator{\atantwo}{atan2}
+#+LaTex_HEADER: \newcommand*{\ctrb}{\EuScript{C}}
+#+LaTex_HEADER: \newcommand*{\obsv}{\EuScript{O}}
+
+#+title:  Odometría
+# #+date: 2018-04-05
+
+* What do I want the students to understand?			   :noexport:
+- How to calculate odometry for differential drive robots
+
+* Activities                                                       :noexport:
+- Apply Euler's method
+- Programming exercises
+
+
+* Differential drive
+
+** Robot móvil - modelo canónico
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=.3\linewidth]{../figures/X80Pro.jpg}
+    \end{center}
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+#+BEAMER: \pause
+
+
+    \[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
+
+
+
+    \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
+
+** El método de Euler para integración numérica
+
+Dado ecuación diferencial (posiblemente no-lineal y variante en el tiempo)
+\[ \frac{d}{dt} y = f(y,t, u) \]
+y valor inicial \(y(t_k) = y_k\),
+el valor de la función \(y(t_{k+1}) = y(t_k + \Delta t)\) se puede estimar con
+
+\[\hat{y}(t_{k+1}) = y_k + \Delta t \;f\big(y_k, t_k, u(t_k)\big). \]
+
+
+
+
+
+** Integrando el modelo cinemático
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model-details}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+\[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
+\[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
+
+#+BEAMER: \pause
+
+*Actividad* Aplica el método de Euler!
+
+\[\hat{y}(t_{k+1}) = y_k + \Delta t \; f\big(y_k, t_k, u(t_k)\big). \]
+
+   
