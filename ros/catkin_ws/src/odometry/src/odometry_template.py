@@ -7,8 +7,8 @@ import rospy
 import tf2_ros
 from tf import transformations as trf
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Vector3,Transform,TransformStamped,Pose,PoseStamped,PoseWithCovariance,Twist,TwistWithCovariance
-from std_msgs.msg import Float64
+from geometry_msgs.msg import Vector3, TransformStamped, PoseWithCovariance,TwistWithCovariance
+from std_msgs.msg import Float32
 
 
 class MyOdometryPublisher():
@@ -17,8 +17,11 @@ class MyOdometryPublisher():
         rospy.init_node('OdometryPublisher')
 
         # Subscribe to the wheel velocity topics
-        rospy.Subscriber("/wl", Float64, self.callback)
-
+        rospy.Subscriber("/wl", Float32, self._wl_callback)
+        rospy.Subscriber("/wr", Float32, self._wr_callback)
+        self.wl
+        self.wr
+        
         # Publish to the odometry topic
         self.odom_pub = rospy.Publisher("/odometry", Odometry, queue_size=1)
 
@@ -40,7 +43,12 @@ class MyOdometryPublisher():
 
         self.rate = rospy.Rate(20)
         
-
+    def _wl_callback(self, data):
+        self.wl = data.data
+    def _wr_callback(self, data):
+        self.wr = data.data
+        
+        
     def main(self):
 
         # If there's an object attached to the ee we want it to follow its trajectory
@@ -51,74 +59,47 @@ class MyOdometryPublisher():
 
             #----------------------------------------------------------------------------
             # Your code here
+            #
+            # Update the model state
+            # Calculate the pose
+            # Calculate the pose covariance
+            #
             #----------------------------------------------------------------------------
 
+            # Publish the transform between the odometry frame (fixed) and the base_link frame
+
+            t = TransformStamped()
+            t.header.stamp = rospy.Time.now()
+            t.header.frame_id = "odom"
+            t.child_frame_id = "base_link"
+            #t.transform.translation = ?
+            #t.transform.rotation = ?
+            self.br.sendTransform(t)
+
             
-            if self.initial_state is None:
-                if self.model_state is not None:
-                    # Get the initial pose 
-                    t = TransformStamped()
-                    t.header.stamp = rospy.Time.now()
-                    t.header.frame_id = "world"
-                    t.transform.translation = self.model_state.position
-                    t.transform.rotation = self.model_state.orientation
-                    self.brStatic.sendTransform(t)
-                    self.initial_state = PoseStamped()
-                    self.initial_state.header = t.header
-                    self.initial_state.pose.position = t.transform.translation
-                    self.initial_state.pose.orientation = t.transform.rotation
-                    print("Set the initial state")
-                    print(self.model_state)
-                    
-            else:
-                if self.model_state is not None:
-                    # Publish the state of the puzzlebot
-                    t = TransformStamped()
-                    t.header.stamp = rospy.Time.now()
-                    t.header.frame_id = "odom_true"
-                    t.child_frame_id = "base_link"
+            # Publish the odometry message
+            odom = Odometry()
+            # Fill the message with your data
+            odom.header.stamp = rospy.Time.now()
+            odom.header.frame_id = "odom"
+            # Set the position
+            odom.pose.pose = Pose(t.transform.translation, t.transform.rotation)
+            # Set the velocity
+            # odom.twist.twist = ?
 
-                    tt = transform_between_poses(self.initial_state.pose, self.model_state)
-                    
-                    t.transform.translation = tt.translation
-                    t.transform.rotation = tt.rotation
-                    self.br.sendTransform(t)
-                    
-                    # Publish the odometry message
-                    odom = Odometry()
-                    odom.header.stamp = t.header.stamp
-                    odom.header.frame_id = "odom_true"
-                    # Set the position
-                    odom.pose.pose = Pose(t.transform.translation, t.transform.rotation)
-                    # Set the velocity
-                    odom.child_frame_id = "base_link"
-                    vs = self.model_twist.linear # Velocity of puzzlebot in world frame
-                    tr = Transform()
-                    tr.rotation = self.model_state.orientation
-                    vb = transform_vector(tr, (vs.x, vs.y, vs.z), inverse=True)
-                    # Transform to base_link frame
-                    odom.twist.twist = Twist(Vector3(*vb), Vector3(0,0,self.model_twist.angular.z))
-                    
-                    # publish the message
-                    self.odom_pub.publish(odom)
+            # publish the message
+            self.odom_pub.publish(odom)
 
 
-                    # Publish the state
-                    self.x_pub.publish(tt.translation.x)
-                    self.y_pub.publish(tt.translation.y)
-                    self.th_pub.publish(2*np.arccos(tt.rotation.w))
+            # Publish the state
+            self.x_pub.publish(x_est)
+            self.y_pub.publish(y_est)
+            self.th_pub.publish(th_est)
                     
-                    
-    def callback(self, data):
-        aux_idx = data.name.index('puzzlebot')
-
-        self.model_state = data.pose[aux_idx]
-        self.model_twist = data.twist[aux_idx]
-        
 if __name__ == '__main__':
 
     try:
-        aux = OdometryPublisher()
+        aux = MyOdometryPublisher()
         aux.main()
 
     except (rospy.ROSInterruptException, rospy.ROSException("topic was closed during publish()")):
