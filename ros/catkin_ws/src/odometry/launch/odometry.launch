@@ -1,0 +1,7 @@
+<launch>
+<!-- Launch the node calculating the true odometry based on information from gazebo-->
+<node name="odometry_true" pkg="odometry" type="reference_odometry.py"/>
+
+<!-- Add other nodes -->
+
+</launch>
