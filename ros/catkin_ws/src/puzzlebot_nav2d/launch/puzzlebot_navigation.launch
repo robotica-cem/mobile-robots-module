@@ -1,4 +1,17 @@
 <launch>
   <arg name="map_file" default="$(find puzzlebot_nav2d)/maps/rover-bot-map-map.yaml" />
+  <arg name="scan" default="/laser/scan" />
+
+
+  <node name="odometry_true" pkg="odometry" type="reference_odometry.py"/>
+
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- Launching amcl to get the transform between odom and map
+  <node name="amcl" pkg="amcl" type="amcl">
+    <param name="scan" value="$(arg scan)"/>
+    <param name="_odom_frame_id" value="odom_true"/>
+    <param name="_base_frame_id" value="base_link"/>
+  </node> -->
+  
 </launch>

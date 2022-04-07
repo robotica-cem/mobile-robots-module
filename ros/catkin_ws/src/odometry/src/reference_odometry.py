@@ -129,6 +129,7 @@ class OdometryPublisher():
                     t = TransformStamped()
                     t.header.stamp = rospy.Time.now()
                     t.header.frame_id = "world"
+                    t.child_frame_id = "odom_true"
                     t.transform.translation = self.model_state.position
                     t.transform.rotation = self.model_state.orientation
                     self.brStatic.sendTransform(t)
@@ -176,6 +177,7 @@ class OdometryPublisher():
                     self.x_pub.publish(tt.translation.x)
                     self.y_pub.publish(tt.translation.y)
                     self.th_pub.publish(2*np.arccos(tt.rotation.w))
+
                     
                     
     def callback(self, data):

@@ -18,21 +18,21 @@
     <arg name="use_sim_time" value="$(arg use_sim_time)"/>
     <arg name="headless" value="$(arg headless)"/>
   </include>
-  
+
   <!--load robot description -->
-   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find puzzlebot_gazebo)/urdf/puzzlebot.xacro'" />
-    
+   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find puzzlebot_gazebo)/urdf/puzzlebotwithlidar.xacro'" />
+
     <arg name="x" default="-4"/>
     <arg name="y" default="-4"/>
     <arg name="z" default="0.0"/>
-    
+
   <node name="puzzlebot_spawn" pkg="gazebo_ros" type="spawn_model"  output="screen"
           args="-urdf -param robot_description -model puzzlebot -x $(arg x) -y $(arg y) -z $(arg z)" />
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
   </node>
 
-  <node name="joint_state_publisher"  pkg="joint_state_publisher" type="joint_state_publisher"> 
+  <node name="joint_state_publisher"  pkg="joint_state_publisher" type="joint_state_publisher">
   </node>
 
   <node name="puzzlebot_controller" pkg="puzzlebot_control" type="puzzlebot_control_node"/>
@@ -40,5 +40,3 @@
 <include file="$(find puzzlebot_control)/launch/puzzlebot_control.launch"/>"
 
 </launch>
-
-  

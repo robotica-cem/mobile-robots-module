@@ -1,4 +1,4 @@
-image: rover-bot-map-map.png
+image: rover-bot-map-map.pgm
 resolution: 0.02
 origin: [-6.0, -5.0, 0.0]
 occupied_thresh: 0.65
