@@ -1,4 +1,4 @@
-% Created 2022-03-30 Wed 16:38
+% Created 2022-03-31 Thu 18:29
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -34,9 +34,17 @@
 \maketitle
 
 \section{Mobile robots}
-\label{sec:orgb4c78bb}
+\label{sec:org29e8592}
 
-\begin{frame}[label={sec:orgfc6503f}]{Modelo canónico a.k.a modelo uniciclo}
+\begin{frame}[label={sec:orgb81a4f2}]{El concepto de \emph{estado}}
+\pause
+
+\begin{quote}
+El conjunto de información sobre el pasado del sistema necesario para predicir el comportamiento del sistema en el futuro (dado todas las señales de entrada)
+\end{quote}
+\end{frame}
+
+\begin{frame}[label={sec:orge9b96e8}]{Modelo canónico a.k.a modelo uniciclo}
 \begin{center}
  \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
 \end{center}
@@ -47,9 +55,9 @@ De Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots wit
 
 
 \section{Differential drive}
-\label{sec:org9c556a4}
+\label{sec:org7c4c6bd}
 
-\begin{frame}[label={sec:org093d6a7}]{Robot tipo diferencial (\emph{differential drive})}
+\begin{frame}[label={sec:orgfc27793}]{Robot tipo diferencial (\emph{differential drive})}
 \begin{center}
  \includegraphics[width=.5\linewidth]{../figures/X80Pro.jpg}
 \end{center}
@@ -57,7 +65,7 @@ De Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots wit
 X80Pro Dr. Robot Inc.
 \end{frame}
 
-\begin{frame}[label={sec:org3489ce1}]{Robot móvil - modelo uniciclo}
+\begin{frame}[label={sec:orgbc4f0cd}]{Robot móvil - modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -84,7 +92,7 @@ X80Pro Dr. Robot Inc.
 
 
 
-\begin{frame}[label={sec:orga45f18e}]{Diferencial a modelo uniciclo}
+\begin{frame}[label={sec:orgee79b36}]{Diferencial a modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -111,7 +119,7 @@ X80Pro Dr. Robot Inc.
 \end{frame}
 
 
-\begin{frame}[label={sec:org7af4ead}]{Diferencial a modelo uniciclo}
+\begin{frame}[label={sec:orgbc5cbd4}]{Diferencial a modelo uniciclo}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -135,15 +143,15 @@ dado los límites de la velocidad angular de las ruedas.
 \end{frame}
 
 
-\begin{frame}[label={sec:org4f686c1}]{Implementación}
+\begin{frame}[label={sec:org69b2c3d}]{Implementación}
 Notebook en google colab (página en Canvas)
 \end{frame}
 
 
 \section{Car-like}
-\label{sec:org2cd4728}
+\label{sec:org687bd93}
 
-\begin{frame}[label={sec:org1421399}]{Robots tipo coche - modelo bicicleta}
+\begin{frame}[label={sec:orge8c3f3b}]{Robots tipo coche - modelo bicicleta}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -172,7 +180,7 @@ Para un robot que se mueve instantaneamente en una trayectoria círcular con rad
 
 
 
-\begin{frame}[label={sec:orgbd0ef99}]{Robots tipo coche - modelo bicicleta}
+\begin{frame}[label={sec:orgd830cee}]{Robots tipo coche - modelo bicicleta}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -195,7 +203,7 @@ dado los límites de la velocidad \(v\) y del ángulo de dirección \(\phi\).
 \end{frame}
 
 
-\begin{frame}[label={sec:orgaf693a2}]{Implementación}
+\begin{frame}[label={sec:org5dbd0e6}]{Implementación}
 Notebook en google colab (página en Canvas)
 \end{frame}
 \end{document}

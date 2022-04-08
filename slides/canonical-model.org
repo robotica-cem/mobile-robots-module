@@ -26,8 +26,15 @@
 
 * Mobile robots
 
-** Modelo canónico a.k.a modelo uniciclo
+** El concepto de /estado/
 
+#+BEAMER: \pause
+
+#+begin_quote
+El conjunto de información sobre el pasado del sistema necesario para predicir el comportamiento del sistema en el futuro (dado todas las señales de entrada)
+#+end_quote
+
+** Modelo canónico a.k.a modelo uniciclo
     \begin{center}
      \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
     \end{center}
