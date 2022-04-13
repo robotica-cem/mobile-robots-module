@@ -120,7 +120,6 @@ class OdometryPublisher():
 
     def main(self):
 
-        # If there's an object attached to the ee we want it to follow its trajectory
         while not rospy.is_shutdown():
             self.rate.sleep()
             if self.initial_state is None:
