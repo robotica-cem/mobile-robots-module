@@ -1,11 +1,12 @@
 digraph G {
-"base_link" -> "chassis"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 4382.315 sec old)\nBuffer length: 0.000 sec\n"];
-"chassis" -> "camera"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 4382.315 sec old)\nBuffer length: 0.000 sec\n"];
-"chassis" -> "hokuyo_link"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 4382.315 sec old)\nBuffer length: 0.000 sec\n"];
-"chassis" -> "left_wheel"[label="Broadcaster: /robot_state_publisher\nAverage rate: 47.283 Hz\nMost recent transform: 4382.295 ( 0.020 sec old)\nBuffer length: 3.680 sec\n"];
-"chassis" -> "right_wheel"[label="Broadcaster: /robot_state_publisher\nAverage rate: 47.283 Hz\nMost recent transform: 4382.295 ( 0.020 sec old)\nBuffer length: 3.680 sec\n"];
+"chassis" -> "right_wheel"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 50.202\nBuffer length: 4.96\nMost recent transform: 714.552\nOldest transform: 709.592\n"];
+"chassis" -> "camera"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"world" -> "odom_true"[label=" Broadcaster: /ReferenceOdometryPublisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "chassis"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"chassis" -> "left_wheel"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 50.202\nBuffer length: 4.96\nMost recent transform: 714.552\nOldest transform: 709.592\n"];
+"odom_true" -> "base_link"[label=" Broadcaster: /ReferenceOdometryPublisher\nAverage rate: 20.21\nBuffer length: 4.948\nMost recent transform: 714.551\nOldest transform: 709.603\n"];
 edge [style=invis];
  subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
-"Recorded at time: 4382.315"[ shape=plaintext ] ;
- }->"base_link";
+"Recorded at time: 714.562"[ shape=plaintext ] ;
+}->"world";
 }

@@ -4,7 +4,7 @@ import rospy
 import math
 import tf2_ros
 import geometry_msgs.msg
-from tf2_geometry_msgs import Vector3Stamped
+from tf2_geometry_msgs import PointStamped
 
 class Go2PointController:
     def __init__(self):
@@ -15,28 +15,28 @@ class Go2PointController:
 
 
     def go_to_point(self, x, y, frame):
-        goal = Vector3Stamped()
+        goal = PointStamped()
         goal.header.frame_id = frame
-        goal.vector.x = x
-        goal.vector.y = y
-        goal.vector.z = 0
+        goal.point.x = x
+        goal.point.y = y
+        goal.point.z = 0
         print(goal)
         
-        #while not rospy.is_shutdown():
-        try:
-            bot_goal = self.tf_buffer.transform(goal, 'base_link')
-            print(bot_goal)
-            msg = geometry_msgs.msg.Twist()
+        while not rospy.is_shutdown():
+            try:
+                goal.header.stamp = rospy.Time.now()
+                bot_goal = self.tf_buffer.transform(goal, 'base_link', timeout = rospy.Duration(1))
 
-            msg.angular.z = 4 * math.atan2(bot_goal.vector.y, bot_goal.vector.x)
-            msg.linear.x = 0.5 * math.sqrt(bot_goal.vector.x ** 2 + bot_goal.vector.y ** 2)
+                msg = geometry_msgs.msg.Twist()
 
-            print(msg)
-            #self.vel_pub.publish(msg)
+                #msg.angular.z = 
+                #msg.linear.x = 
+                # print(msg)
+                self.vel_pub.publish(msg)
 
-        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
-            pass
-            #continue
+            except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+                #pass
+                continue
 
         self.rate.sleep()        
 
