@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Implements a "ground truth" odometry using the model state information from Gazebo.
+""" Implement a node that calculates the odometry for the puzzlebot robot.
 """
 
 import numpy as np
@@ -51,9 +51,9 @@ class MyOdometryPublisher():
         
     def main(self):
 
-        # If there's an object attached to the ee we want it to follow its trajectory
         while not rospy.is_shutdown():
             self.rate.sleep()
+            
             self.current_time = rospy.time()
             dt  = self.current_time - self.last_time
 
