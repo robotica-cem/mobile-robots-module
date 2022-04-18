@@ -25,6 +25,10 @@ class Go2PointController:
         while not rospy.is_shutdown():
             try:
                 goal.header.stamp = rospy.Time.now()
+                # Should also work using
+                # goal.header.stamp = rospy.Time(0)
+                
+                # Obtain the goal point expressed in the reference frame of base_link
                 bot_goal = self.tf_buffer.transform(goal, 'base_link', timeout = rospy.Duration(1))
 
                 msg = geometry_msgs.msg.Twist()
