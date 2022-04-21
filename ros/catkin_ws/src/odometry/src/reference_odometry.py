@@ -175,7 +175,8 @@ class OdometryPublisher():
                     # Publish the state
                     self.x_pub.publish(tt.translation.x)
                     self.y_pub.publish(tt.translation.y)
-                    self.th_pub.publish(2*np.arccos(tt.rotation.w))
+                    qv = np.array([tt.rotation.x, tt.rotation.y, tt.rotation.z])
+                    self.th_pub.publish(2*np.arcsin(np.linalg.norm(qv))*np.sign(qv[2]))
 
                     
                     
