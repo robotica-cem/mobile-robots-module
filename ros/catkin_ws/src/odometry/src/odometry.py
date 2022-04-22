@@ -85,34 +85,6 @@ class MyOdometryPublisher():
         while not rospy.is_shutdown():
             self.rate.sleep()
             
-            if (self.wl is not None) and (self.wr is not None):
-                self.current_time = rospy.get_time()
-                dt  = self.current_time - self.last_time
-                self.last_time = self.current_time
-            
-                w = (self.wr-self.wl) *f1
-                v = (self.wr+self.wl)*f2
-                delta_th = w*dt
-                delta_s = v*dt
-                th = self.model_state[0]
-                th_mid = th + 0.5*delta_th
-                cth = np.cos(th_mid)
-                sth = np.sin(th_mid)
-                
-                self.model_state += np.array([delta_th,
-                                              delta_s*cth,
-                                              delta_s*sth])
-
-                # Jacobians
-                FzT = np.array([[1, -delta_s*sth, delta_s*cth],
-                                [0,1,0],
-                                [0,0,1]])
-                FuT = np.array([[dt, -0.5*dt*delta_s*sth, 0.5*dt*delta_s*cth],
-                                [0, dt*cth, dt*sth]])
-
-                self.covariance_state = np.dot(FzT.T, np.dot(self.covariance_state, FzT)) + \
-                    np.dot(FuT.T, np.dot(self.covariance_u,FuT))
-                
             self.model_pose.pose.position.x = self.model_state[1]
             self.model_pose.pose.position.y = self.model_state[2]
                 
@@ -164,7 +136,37 @@ class MyOdometryPublisher():
             self.x_pub.publish(self.model_state[1])
             self.y_pub.publish(self.model_state[2])
             self.th_pub.publish(self.model_state[0])
-                    
+
+            # Update the state
+                        if (self.wl is not None) and (self.wr is not None):
+                self.current_time = rospy.get_time()
+                dt  = self.current_time - self.last_time
+                self.last_time = self.current_time
+            
+                w = (self.wr-self.wl) *f1
+                v = (self.wr+self.wl)*f2
+                delta_th = w*dt
+                delta_s = v*dt
+                th = self.model_state[0]
+                th_mid = th + 0.5*delta_th
+                cth = np.cos(th_mid)
+                sth = np.sin(th_mid)
+                
+                self.model_state += np.array([delta_th,
+                                              delta_s*cth,
+                                              delta_s*sth])
+
+                # Jacobians
+                FzT = np.array([[1, -delta_s*sth, delta_s*cth],
+                                [0,1,0],
+                                [0,0,1]])
+                FuT = np.array([[dt, -0.5*dt*delta_s*sth, 0.5*dt*delta_s*cth],
+                                [0, dt*cth, dt*sth]])
+
+                self.covariance_state = np.dot(FzT.T, np.dot(self.covariance_state, FzT)) + \
+                    np.dot(FuT.T, np.dot(self.covariance_u,FuT))
+                
+
 if __name__ == '__main__':
 
     try:
