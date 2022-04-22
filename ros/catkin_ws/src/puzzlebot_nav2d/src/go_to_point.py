@@ -1,5 +1,6 @@
 #!/usr/bin/env python  
 import sys
+import numpy as np
 import rospy
 import math
 import tf2_ros
@@ -36,14 +37,14 @@ class Go2PointController:
             try:
                 #goal.header.stamp = rospy.Time.now()
                 # Should also work using
-                 goal.header.stamp = rospy.Time(0)
+                goal.header.stamp = rospy.Time(0)
                 
                 # Obtain the goal point expressed in the reference frame of base_link
                 bot_goal = self.tf_buffer.transform(goal, 'base_link', timeout = rospy.Duration(1))
 
                 e_th = np.arctan2(bot_goal.point.y, bot_goal.point.x)
                 distx = np.abs(bot_goal.point.x)
-                v = self.v0 * (1 - np.exp(-self.alpha*distx**2))*sign(bot_goal_point.x)
+                v = self.v0 * (1 - np.exp(-self.alpha*distx**2))*np.sign(bot_goal.point.x)
 
                 msg = geometry_msgs.msg.Twist()
                 msg.angular.z = self.Kth * e_th  

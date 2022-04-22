@@ -64,7 +64,7 @@ class OdometryComparator():
 
                 q01 = trf.quaternion_multiply(trf.quaternion_conjugate(q0), q1)
                 dist = np.linalg.norm(p1 - p0) # Both are in the same static reference system 
-                angle = 2*np.arcsin(np.linalg.norm(q01[:3])))
+                angle = 2*np.arcsin(np.linalg.norm(q01[:3]))
 
                 self.dist_pub.publish(dist)
                 self.ang_pub.publish(angle)
