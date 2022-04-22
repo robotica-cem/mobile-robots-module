@@ -1,17 +1,27 @@
 <launch>
   <arg name="map_file" default="$(find puzzlebot_nav2d)/maps/rover-bot-map-map.yaml" />
   <arg name="scan" default="/laser/scan" />
+  <arg name="base_frame" default="odom_true" />
+  <arg name="robot_init_x" default="-4.0"/>
+  <arg name="robot_init_y" default="-4.0"/>
+  <arg name="robot_init_phi" default="0"/>
+
 
 
   <node name="odometry_true" pkg="odometry" type="reference_odometry.py"/>
 
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
 
-  <!-- Launching amcl to get the transform between odom and map
-  <node name="amcl" pkg="amcl" type="amcl">
-    <param name="scan" value="$(arg scan)"/>
-    <param name="_odom_frame_id" value="odom_true"/>
-    <param name="_base_frame_id" value="base_link"/>
-  </node> -->
-  
+  <!-- Launching amcl to get the transform between odom and map -->
+  <node name="amcl" pkg="amcl" type="amcl" output="screen">
+    <remap from="scan" to="$(arg scan)"/>
+    <param name="odom_frame_id" value="$(arg base_frame)"/>
+    <param name="base_frame_id" value="base_link"/>
+    <param name="use_map_topic" value="true"/>
+    <param name="initial_pose_x" value="$(arg robot_init_x)"/>
+    <param name="initial_pose_y" value="$(arg robot_init_y)"/>
+    <param name="initial_pose_a" value="$(arg robot_init_phi)"/>
+
+</node>
+
 </launch>
