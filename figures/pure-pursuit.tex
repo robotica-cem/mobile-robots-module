@@ -1,0 +1,45 @@
+\documentclass[margin=5mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf,tikz}
+\usetikzlibrary{calc}
+
+  \begin{document}
+
+  \begin{tikzpicture}[node distance=20mm, anchor=north,
+    waypoint/.style={circle, inner sep=0.4mm, red!60!black, draw},
+    robotpath/.style={dashed, blue!80!black},
+    lookcircle/.style={dotted, green!60!black},
+    ]
+
+    \def\Lone{2}
+    \pgfmathsetmacro{\cone}{\Lone*cos(155)}
+    \pgfmathsetmacro{\sone}{\Lone*sin(155)}
+    \def\Ltwo{3}
+    \pgfmathsetmacro{\ctwo}{\Ltwo*cos(135)}
+    \pgfmathsetmacro{\stwo}{\Ltwo*sin(135)}
+    \def\Lthree{6.5}
+    \pgfmathsetmacro{\cthree}{\Lthree*cos(115)}
+    \pgfmathsetmacro{\sthree}{\Lthree*sin(115)}
+
+    \draw[->] (0,0) to (-4cm, 0) node[above] {$y_b$};
+  \draw[->] (0,0) to (0, 6cm) node[right] {$x_b$};
+
+  \node[waypoint, pin=180:{$p_k$}] (wp1) at (-2.2cm,-3cm) {};
+  \node[waypoint, pin=180:{$p_{k+1}$}] (wp2) at (-3cm, 5cm) {};
+  \node[waypoint, pin=180:{$p_{k+2}$}] (wp3) at (1cm,8cm) {};
+
+  \draw[robotpath] (wp1) to (wp2);
+  \draw[robotpath] (wp2) to (wp3);
+  \draw[robotpath] (wp3) -- ++(2, 0.5cm);
+
+  \draw[lookcircle] (0, -2) arc[radius=2, start angle=270, end angle=45];
+  \draw[<->, green!60!black] (0,0) -- node[above] {$L_1$} (\cone , \sone);
+
+  \draw[lookcircle] (\ctwo, -\stwo) arc[radius=\Ltwo, start angle=225, end angle=60];
+  \draw[<->, green!60!black] (0,0) -- node[above] {$L_2$} (\ctwo , \stwo);
+
+  \draw[lookcircle] (-\Lthree, 0) arc[radius=\Lthree, start angle=180, end angle=70];
+  \draw[<->, green!60!black] (0,0) -- node[right, pos=0.6] {$L_3$} (\cthree , \sthree);
+\end{tikzpicture}
+\end{document}
