@@ -41,15 +41,25 @@ class Go2PointController:
                 # Obtain the goal point expressed in the reference frame of base_link
                 bot_goal = self.tf_buffer.transform(goal, 'base_link', timeout = rospy.Duration(1))
 
-                e_th = np.arctan2(bot_goal.point.y, bot_goal.point.x)
-                distx = np.abs(bot_goal.point.x)
-                v = self.v0 * (1 - np.exp(-self.alpha*distx**2))*sign(bot_goal_point.x)
+                #--------------------------------------------------------------
+                # Your code here
+                # 1) Calculate the errors
+                # 2) Calculate the linear and angular velocities.
+                # 3) Publish the twist message to /cmd_vel
 
+                e_theta = 0.0
+                e_dist = 0.0
+                v = 0.0
+                w = 0.0
+                
                 msg = geometry_msgs.msg.Twist()
-                msg.angular.z = self.Kth * e_th  
+                msg.angular.z = w
                 msg.linear.x = v 
                 print(msg)
                 self.vel_pub.publish(msg)
+
+                #--------------------------------------------------------------
+                #--------------------------------------------------------------
 
             except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
                 #pass
