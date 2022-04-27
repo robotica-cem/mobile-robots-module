@@ -86,7 +86,7 @@ class PurePursuitController:
         self.vel_pub = rospy.Publisher('/cmd_vel' , geometry_msgs.msg.Twist, queue_size=1 )
         self.rate = rospy.Rate(10.0)
 
-        self.L = look_ahead_distance
+        self.L = look_ahead_dist
         self.vmax = max_vel
         self.go2point = go_to_point_control
         self.steer2point = steer_to_point_control
@@ -120,14 +120,14 @@ class PurePursuitController:
         goal = waypoints[-1]
         
         #if not rospy.is_shutdown():
-        for cwp_, nwp_ in zip(waypoints(:-1), waypoints(1:)):
-            current_wp.x = cwp_[0]
-            current_wp.y = cwp_[1]
-            next_wp.x = nwp_[0]
-            next_wp.y = nwp_[1]
+        for cwp_, nwp_ in zip(waypoints[:-1], waypoints[1:]):
+            current_wp.point.x = cwp_[0]
+            current_wp.point.y = cwp_[1]
+            next_wp.point.x = nwp_[0]
+            next_wp.point.y = nwp_[1]
 
             # If next waypoint is goal, then just go there
-            if nwp_ == goal:
+            if np.all(np.equal(nwp_, goal)):
                 tol = 1e-2 # Stop when within 1cm of goal
                 dist = 1
                 while dist > tol:
@@ -135,7 +135,7 @@ class PurePursuitController:
                     next_wp.header.stamp = rospy.Time(0)
                     next_wp_b = self.tf_buffer.transform(next_wp, 'base_link',
                                                     timeout = rospy.Duration(1))
-                    w, v, dist = self.go2point(next_wp_b.x, next_wp_b.y, self.vmax)
+                    w, v, dist = self.go2point(next_wp_b.point.x, next_wp_b.point.y, self.vmax)
 
                     msg.angular.z = w
                     msg.linear.x = v 
@@ -156,8 +156,8 @@ class PurePursuitController:
                                                     timeout = rospy.Duration(1))
                     next_wp_b = self.tf_buffer.transform(next_wp, 'base_link',
                                                     timeout = rospy.Duration(1))
-                    pg, beta = self.get_goal_point([current_wp_b.x, current_wp_b.y],
-                                                   [next_wp_b.x, next_wp_b.y],
+                    pg, beta = self.get_goal_point([current_wp_b.point.x, current_wp_b.point.y],
+                                                   [next_wp_b.point.x, next_wp_b.point.y],
                                                    self.L)
                     w =  self.steer2point(pg[0], pg[1], self.vmax)
                     msg.angular.z = w
@@ -170,22 +170,23 @@ class PurePursuitController:
                     
                 if np.isnan(beta):
                     # Must mean that trajectory is further than the look-ahead distance
-                    
+                    pass
                     
 
 if __name__ == '__main__':
     rospy.init_node('Pure_pursuit')
-    L = rospy.get_param("~look_ahead_distance", 0.3)
-    vmax = rospy.get_param("~vel_lin_max", 0.6)
-    Kth = rospy.get_param("~K_theta", 4)
-    alpha = rospy.get_param("~alpha", 4)
-    frame = rospy.get_param("~frame")
-    waypoints = np.asarray(rospy.get_param("~waypoints"), [-4,-4, -4, 2])
+    L = rospy.get_param("/pure_pursuit/look_ahead_distance", 0.3)
+    vmax = rospy.get_param("/pure_pursuit/vel_lin_max", 0.6)
+    Kth = rospy.get_param("/pure_pursuit/K_theta", 4)
+    alpha = rospy.get_param("/pure_pursuit/alpha", 4)
+    frame = rospy.get_param("/pure_pursuit/frame")
+    waypoints = rospy.get_param("/waypoints", [-4,-4, -4, 2])
+    print(waypoints)
     waypoints = np.reshape(waypoints, (-1, 2))
     
     
     ppc = PurePursuitController(L, vmax,
-                                partial(go_to_point_controller(Kth=Kth, alpha=alpha)),
+                                partial(go_to_point_controller, Kth=Kth, alpha=alpha),
                                 steer_towards_point_controller)
     
     ppc.follow_trajectory(waypoints, frame)
