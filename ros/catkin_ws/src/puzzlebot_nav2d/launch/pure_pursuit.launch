@@ -3,5 +3,5 @@
   <rosparam command="load" file="$(find puzzlebot_nav2d)/config/waypoints.yaml" />
 
   <node name="odometry_true" pkg="odometry" type="reference_odometry.py"/>
-  <node name="pp" pkg="puzzlebot_nav2d" type="pure_pursuit_template.py"/>
+  <node name="pp" pkg="puzzlebot_nav2d" type="pure_pursuit_bt.py"/>
 </launch>
