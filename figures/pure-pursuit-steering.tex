@@ -1,0 +1,58 @@
+\documentclass[margin=5mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf,tikz, pgfplots}
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+\pgfplotsset{compat=newest}
+
+\makeatletter
+\newcommand{\gettikzxy}[3]{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax
+  \edef#2{\the\pgf@x}%
+  \edef#3{\the\pgf@y}%
+}
+\makeatother
+
+  \begin{document}
+
+  \begin{tikzpicture}[node distance=20mm, anchor=north,
+    waypoint/.style={circle, inner sep=0.4mm, red!60!black, draw},
+    robotpath/.style={dashed, blue!30!white},
+    lookcircle/.style={dotted, green!60!black},
+    ]
+
+    \node[coordinate] (O) at (0,0) {};
+    \def\Lone{5}
+    \pgfmathsetmacro{\cone}{\Lone*cos(255)}
+    \pgfmathsetmacro{\sone}{\Lone*sin(255)}
+
+    \draw[->] (0,0) to node[below, pos=0.99] {$y_b$} (-6cm, 0) ;
+    \draw[->] (0,0) to (0, 6cm) node[right] {$x_b$};
+
+  \node[waypoint, pin=180:{$p_k$}] (wp1) at (-2.2cm,-3cm) {};
+  \node[waypoint, pin=180:{$p_{k+1}$}] (wp2) at (-3cm, 5cm) {};
+  \node[waypoint, pin=180:{$p_{k+2}$}] (wp3) at (1cm,8cm) {};
+
+  \draw[name path=pth, robotpath] (wp1) to (wp2);
+  \draw[robotpath] (wp2) to (wp3);
+  \draw[robotpath] (wp3) -- ++(2, 0.5cm);
+
+  \draw[name path=circ, lookcircle] (0, -\Lone) arc[radius=\Lone, start angle=270, end angle=45];
+  \draw[<->, green!60!black] (0,0) -- node[left] {$L$} (\cone , \sone);
+  \path [name intersections={of=pth and circ,by=E}];
+  \node[waypoint, pin=180:{$p_g$}] at (E) {};
+  \gettikzxy{(E)}{\ax}{\ay} 
+  \pgfmathsetmacro{\axcm}{\ax*1pt/1cm}
+  \pgfmathsetmacro{\RR}{\Lone*\Lone/2/\axcm}
+
+  \draw[dotted, black!80] (E) -- (E -| 0,0) node[right, black] {\large $x$};
+  \draw[dotted, black!80] (E) -- (0,0 -| E) node[below, black] {\large $y$};
+
+  
+  \draw[dashed, red!60!black] (\RR cm, 0) -- node[below, pos=0] {$R$} node[left] {$R$} (E);
+  
+  \draw[dotted, orange!80!white] (0,0) arc[radius=-\RR, start angle=0, end angle=80];
+  
+\end{tikzpicture}
+\end{document}
