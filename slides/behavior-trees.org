@@ -1,0 +1,129 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169]
+#+OPTIONS: H:2
+# #+BEAMER_THEME: Madrid
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+     
+#+LaTex_HEADER: \usepackage{khpreamble, euscript}
+#+LaTex_HEADER: \DeclareMathOperator{\atantwo}{atan2}
+#+LaTex_HEADER: \newcommand*{\ctrb}{\EuScript{C}}
+#+LaTex_HEADER: \newcommand*{\obsv}{\EuScript{O}}
+
+#+title:  Behavior trees
+# #+date: 2018-04-05
+
+* What do I want the students to understand?			   :noexport:
+- Modeling behavior
+
+* Activities                                                       :noexport:
+- Fill empty slots in bt
+
+* Example behavior tree
+
+** Ejemplo /Pac-Man/
+
+\begin{center}
+  \includegraphics[width=.8\linewidth]{../figures/bt-book-fig-1_10.png}
+\end{center}
+
+#+begin_export latex
+{\footnotesize Capitulo 1.4 en Colledanchise y Ögren \emph{Behavior trees in robotics and AI}}
+#+end_export
+
+** Ejemplo /Pac-Man/
+
+  \includegraphics[width=0.4\linewidth]{../figures/bt-book-fig-1_10.png}
+
+\begin{center}
+  \includegraphics[width=.8\linewidth]{../figures/bt-book-fig-1_11.png}
+\end{center}
+
+** Ejemplo /Pac-Man/ modo combatitivo
+
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+  \includegraphics[width=0.6\linewidth]{../figures/bt-book-fig-1_10.png}
+
+\includegraphics[width=\linewidth]{../figures/bt-book-fig-1_11.png}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+#+BEAMER: \pause
+
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../figures/bt-book-fig-1_12.png}
+\end{center}
+
+
+** Ejemplo /Pick-and-place reto/
+
+
+\begin{center}
+  \includegraphics[width=0.8\linewidth]{../figures/reto-gazebo.png}
+\end{center}
+
+** Ejemplo /Pick-and-place reto/
+
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../figures/bt-manipulator-task-exercise}
+\end{center}
+
+*Actividad* Llena las cajas vacías
+
+
+** Ejemplo /Pick-and-place reto/
+
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../figures/bt-manipulator-task}
+\end{center}
+
+** Ejemplo /Pick-and-place reto/
+
+Incluyendo más detalles
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../figures/bt-manipulator-task-detailed}
+\end{center}
+
+
+** Pure pursuit
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../figures/bt-pure-pursuit}
+\end{center}
+
+** Pure pursuit 
+
+Un problema posible
+
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../figures/prm-example}
+\end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+#+BEAMER: \pause
+\begin{center}
+  \includegraphics[width=\linewidth]{../figures/bt-pure-pursuit-collision-excercise}
+\end{center}
+

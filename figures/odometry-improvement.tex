@@ -1,0 +1,62 @@
+\documentclass[margin=5mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf,tikz}
+
+\newcommand{\robot}[1]{%
+  \node[anchor=center,circle, draw, inner sep=4mm] at (0,0) {};
+  \draw (0,0) to (4mm, 0);
+  \draw[->, red!60!black] (0,0) to (20mm, 0);
+  \node at (20mm, -2mm) {$v_{#1}$};
+  \draw[->, red!60!black] (0, 2.7mm) arc[radius=2.7mm, start angle=90, end angle=270];
+  \node at (-4mm, 3mm) {$\omega_{#1}$};
+}
+
+\begin{document}
+
+\begin{tikzpicture}[node distance=20mm, anchor=north, scale=1.6]
+
+  \def\xone{0}
+  \def\yone{-3}
+  \def\thetaone{0}
+  \def\deltatheta{40}
+  \pgfmathsetmacro{\R}{sqrt(\xone*\xone + \yone*\yone)}
+  \pgfmathsetmacro{\thetatwo}{\thetaone + \deltatheta}
+  \pgfmathsetmacro{\xtwo}{\R*cos(\thetatwo-90}
+  \pgfmathsetmacro{\ytwo}{\R*sin(\thetatwo-90)}
+
+  
+  
+  
+  \draw[->] (0,0) to (6cm, 0);
+  \draw[->] (0,0) to (0, 6cm);
+
+  \begin{scope}[xshift=2cm, yshift=4cm, rotate=10 ]
+    \begin{scope}[xshift=\xone cm, yshift=\yone cm, rotate=\thetaone]
+     \robot{k}
+    \end{scope}
+    \begin{scope}[xshift=\xtwo cm, yshift=\ytwo cm, rotate=\thetatwo]
+      \robot{k+1}
+    \end{scope}
+    \draw[dotted, green!60!black] (0,0) -- (\xone cm, \yone cm);
+    \draw[dotted, green!60!black] (0,0) -- (\xtwo cm, \ytwo cm);
+    \draw[->, dashed, green!60!black] (\xone cm, \yone cm) -- node[coordinate] (midp) {} (\xtwo cm , \ytwo cm);
+    \draw[dashed, green!60!black] (0,0) -- (midp);
+
+    \draw[->, dashed, green!60!black] (0, -1 cm) arc[radius=1 cm, start angle=-90, end angle = -90+\thetatwo] node[pos=0.9, below] {$\Delta \theta_k$};
+    \draw[->, dashed, green!60!black] (0, -2 cm) arc[radius=2 cm, start angle=-90, end angle = -90+0.5*\thetatwo] node[pos=0.5, below] {$\frac{\Delta \theta_k}{2}$};
+    \draw[->, dashed, green!60!black] (1cm, \yone cm) arc[radius=1 cm, start angle=0, end angle = 0.5*\thetatwo] node[pos=0.5, right] {$\frac{\Delta \theta_k}{2}$};
+
+    \draw[dotted, orange!80!white] (\xone cm, \yone cm) arc[radius = \R cm, start angle = -90, end angle= -90+\thetatwo];
+
+    \node[anchor=south] at (0,0) {ICR};
+  \end{scope}
+% \draw (3, 0) -- (3, -0.3) node[below] {$x$};
+  %\draw (0, 3) -- (-0.3, 3) node[left] {$y$};
+
+  %\draw[dashed] (3, 3) to (5, 3); 
+  %\draw[->] (4.5, 3) arc[radius=15mm, start angle=0, end angle=20];
+
+    %\node at (4.7, 3.5) {$\theta$};
+\end{tikzpicture}
+\end{document}

@@ -66,6 +66,9 @@ el valor de la función \(y(t_{k+1}) = y(t_k + \Delta t)\) se puede estimar con
 
 
 ** Integrando el modelo cinemático
+
+\small
+
 *** Graphics
 :PROPERTIES:
 :BEAMER_col: 0.4
@@ -89,4 +92,32 @@ el valor de la función \(y(t_{k+1}) = y(t_k + \Delta t)\) se puede estimar con
 
 \[\hat{y}(t_{k+1}) = y_k + \Delta t \; f\big(y_k, t_k, u(t_k)\big). \]
 
-   
+
+** Una mejor approximación
+
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../figures/odometry-improvement}
+\end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+- Con velocidad angular y linear constante, la trayectoria es un arco de un circulo, con un sector \[\Delta \theta = \omega_k \Delta t.\]
+- La dirección \( \theta_k + \frac{\Delta \theta}{2}\) da la vector hacía la nueva posición.
+  \[\vec{v}_{k, corr} = \begin{bmatrix} v_k \cos(\theta_k + \frac{\Delta \theta}{2})\\v_k\sin(\theta_k + \frac{\Delta \theta}{2})\end{bmatrix}\]
+
+#+BEAMER: \pause
+- El displacemiento es dado por \[\vec{d}_k = \Delta t \vec{v}_{k, corr}.\] *¿Se puede mejorar?* 
+*** notes                                                          :noexport:
+
+  
+
+
+
