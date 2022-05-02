@@ -41,6 +41,30 @@ def go_to_point_controller(x, y, vmax, Kth, alpha):
     d = 0.0
     return w, v, d
     
+def get_goal_point(p0, p1, L):
+    """
+    Returns the intermediate goal point for the pure pursuit algorithm. If no point
+    on the line going through p0 and p1 is at distance L from the origin, then the
+    returned beta should be a nan.
+
+    Arguments
+    ---------
+    p0  :  array-like (2,)
+         The current waypoint.
+    p1  :  array-like (2,)
+         The next waypoint.
+    L   :  float\n",
+         The look-ahead distance
+
+    Returns\n",
+    -------\n",
+    pg   :  ndarray (2,)
+          The intermediate goal point
+    beta :  float
+           The value giving the position of the goal point on the line connectin p0 and p1.
+    """
+
+
 def steer_towards_point_controller(x, y, v):
     """
     Given an intermediate goal point and a (constant) linear velocity, calculates the
@@ -156,7 +180,7 @@ class PurePursuitController:
                                                     timeout = rospy.Duration(1))
                     next_wp_b = self.tf_buffer.transform(next_wp, 'base_link',
                                                     timeout = rospy.Duration(1))
-                    pg, beta = self.get_goal_point([current_wp_b.point.x, current_wp_b.point.y],
+                    pg, beta = get_goal_point([current_wp_b.point.x, current_wp_b.point.y],
                                                    [next_wp_b.point.x, next_wp_b.point.y],
                                                    self.L)
                     w =  self.steer2point(pg[0], pg[1], self.vmax)
@@ -180,7 +204,7 @@ if __name__ == '__main__':
     Kth = rospy.get_param("/pure_pursuit/K_theta", 4)
     alpha = rospy.get_param("/pure_pursuit/alpha", 4)
     frame = rospy.get_param("/pure_pursuit/frame")
-    waypoints = rospy.get_param("/waypoints", [-4,-4, -4, 2])
+    waypoints = rospy.get_param("/waypoints", [0, 0, 0 ,4.5, 4, 4.5])
     print(waypoints)
     waypoints = np.reshape(waypoints, (-1, 2))
     
