@@ -4,15 +4,24 @@
   <arg name="base_frame" default="odom_true" />
   <arg name="robot_init_x" default="-4.0"/>
   <arg name="robot_init_y" default="-4.0"/>
-  <arg name="robot_init_phi" default="0"/>
+  <arg name="robot_init_phi" default="1.57"/>
+  <!-- The true initial direction is phi = 0, because the robot is launched
+       heading in the x-direction of the gazebo world, whose coordinate system
+       coincides with the map. See puzzlebot_gazebo/launch/puzzlebot_room.launch
+       The activity is to find out how fast the amcl package can find the correct
+       transform between true_odom and map-->
 
 
 
+  <!-- The odometry node is needed for the navigation using the amcl package to work -->
   <node name="odometry_true" pkg="odometry" type="reference_odometry.py"/>
 
+  <!-- Without the map, no localization possible (unless we are doing
+       Simultaneous Localizatioto And Mapping (SLAM)) -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
 
-  <!-- Launching amcl to get the transform between odom and map -->
+  <!-- Launching amcl to localize the robot within the map using lidar data.
+       The amcl node will establish the transform between odom and map -->
   <node name="amcl" pkg="amcl" type="amcl" output="screen">
     <remap from="scan" to="$(arg scan)"/>
     <param name="odom_frame_id" value="$(arg base_frame)"/>
