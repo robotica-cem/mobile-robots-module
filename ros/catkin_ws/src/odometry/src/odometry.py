@@ -82,7 +82,11 @@ class MyOdometryPublisher():
 
         f1 = WHEEL_RADIUS/ WHEEL_DISTANCE #To save some calculations
         f2 = 0.5*WHEEL_RADIUS #To save some calculations
+        v = 0
+        w = 0
+        
         while not rospy.is_shutdown():
+
             self.rate.sleep()
             
             self.model_pose.pose.position.x = self.model_state[1]
@@ -102,6 +106,7 @@ class MyOdometryPublisher():
                               np.dot(self.covariance_state, self.state2pose.T))
             
             self.model_pose.covariance[:] = np.ravel(pose_cov)
+
             
             self.model_twist.twist.linear.x = v
             self.model_twist.twist.angular.z = w
@@ -138,7 +143,7 @@ class MyOdometryPublisher():
             self.th_pub.publish(self.model_state[0])
 
             # Update the state
-                        if (self.wl is not None) and (self.wr is not None):
+            if (self.wl is not None) and (self.wr is not None):
                 self.current_time = rospy.get_time()
                 dt  = self.current_time - self.last_time
                 self.last_time = self.current_time

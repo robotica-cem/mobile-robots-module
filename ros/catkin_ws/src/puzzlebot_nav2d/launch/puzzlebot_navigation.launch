@@ -1,11 +1,12 @@
 <launch>
   <arg name="map_file" default="$(find puzzlebot_nav2d)/maps/rover-bot-map-map.yaml" />
   <arg name="scan" default="/laser/scan" />
-  <arg name="base_frame" default="odom_true" />
-  <arg name="robot_init_x" default="-4.0"/>
-  <arg name="robot_init_y" default="-4.0"/>
+  <!--<arg name="base_frame" default="odom_true" /> -->
+  <arg name="base_frame" default="odom" />
+  <arg name="robot_init_x" default="-4"/>
+  <arg name="robot_init_y" default=".0"/>
   <arg name="robot_init_phi" default="1.57"/>
-  <!-- The true initial direction is phi = 0, because the robot is launched
+  <!-- The true initial position is x=-4, y=-4, phi = 0, because the robot is launched
        heading in the x-direction of the gazebo world, whose coordinate system
        coincides with the map. See puzzlebot_gazebo/launch/puzzlebot_room.launch
        The activity is to find out how fast the amcl package can find the correct
@@ -15,6 +16,7 @@
 
   <!-- The odometry node is needed for the navigation using the amcl package to work -->
   <node name="odometry_true" pkg="odometry" type="reference_odometry.py"/>
+  <node name="odometry" pkg="odometry" type="odometry.py"/>
 
   <!-- Without the map, no localization possible (unless we are doing
        Simultaneous Localizatioto And Mapping (SLAM)) -->
@@ -31,6 +33,9 @@
     <param name="initial_pose_y" value="$(arg robot_init_y)"/>
     <param name="initial_pose_a" value="$(arg robot_init_phi)"/>
 
-</node>
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find puzzlebot_nav2d)/config/map_and_laserscan.rviz"/>
+    
 
 </launch>
