@@ -18,6 +18,7 @@
   <node name="odometry_true" pkg="odometry" type="reference_odometry.py"/>
   <node name="odometry" pkg="odometry" type="odometry.py"/>
 
+
   <!-- Without the map, no localization possible (unless we are doing
        Simultaneous Localizatioto And Mapping (SLAM)) -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
@@ -36,6 +37,10 @@
   </node>
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find puzzlebot_nav2d)/config/map_and_laserscan.rviz"/>
-    
+
+  <!-- Calling the service /global_localization causes amcl to initialize with particles
+       distributed uniformly in the free space, instead of initializing with a Gaussian
+       distribution. -->
+  <node name="global_loc" pkg="rosservice" type="rosservice" args="call /global_localization"/>
 
 </launch>
