@@ -1,3 +1,7 @@
+.rosinstall
+.rosinstall.bak
+cartographer/
+cartographer_ros/
 \#*
 .\#*
 build/
