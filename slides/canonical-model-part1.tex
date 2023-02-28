@@ -1,4 +1,4 @@
-% Created 2023-02-27 Mon 13:07
+% Created 2023-02-27 Mon 20:19
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -34,9 +34,9 @@
 \maketitle
 
 \section{Mobile robots}
-\label{sec:orgf5e9929}
+\label{sec:orgfd76dd5}
 
-\begin{frame}[label={sec:org246f7e3}]{Modelo canónico a.k.a modelo uniciclo}
+\begin{frame}[label={sec:org9a51b3d}]{Modelo canónico a.k.a modelo uniciclo}
 \begin{center}
  \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
 \end{center}
@@ -47,9 +47,9 @@ De Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots wit
 
 
 \section{Differential drive}
-\label{sec:orga2e1772}
+\label{sec:org1d21ebe}
 
-\begin{frame}[label={sec:orgd1e1a58}]{Robot tipo diferencial (\emph{differential drive})}
+\begin{frame}[label={sec:org163cf4c}]{Robot tipo diferencial (\emph{differential drive})}
 \begin{center}
  \includegraphics[width=.5\linewidth]{../figures/X80Pro.jpg}
 \end{center}
@@ -57,7 +57,7 @@ De Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots wit
 X80Pro Dr. Robot Inc.
 \end{frame}
 
-\begin{frame}[label={sec:org7068cbf}]{Robot móvil - modelo canónico}
+\begin{frame}[label={sec:org9105af5}]{Robot móvil - modelo canónico}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -89,7 +89,7 @@ X80Pro Dr. Robot Inc.
 
 
 
-\begin{frame}[label={sec:orga51798f}]{De robot diferencial a modelo canónico}
+\begin{frame}[label={sec:org29a6f2f}]{De robot diferencial a modelo canónico}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -108,15 +108,17 @@ X80Pro Dr. Robot Inc.
 \item La velocidad lineal \(v\) del centro robot dado las dos velocidades \(v_R\) y \(v_L\)
 
 \item La velocidad angular \(\omega\) del robot dado las dos velocidades \(v_R\) y \(v_L\)
+\end{enumerate}
 
+
+\begin{enumerate}
 \item Las relaciones invertidas. Es decir, las velocidades angulares \(\omega_R\) y \(\omega_L\) de las ruedas dado las velocidades \(v\) y \(\omega\).
 \end{enumerate}
 \end{column}
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:org6c42443}]{Diferencial a modelo uniciclo}
+\begin{frame}[label={sec:org330e57c}]{Diferencial a modelo canónico}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -135,60 +137,6 @@ Asumiendo simetría entre las dos ruedas y en la dirección de giro.
 En el plano \(v,\, \omega\),  dibuje la región de posibles valores de la señal de entrada al modelo canónico,
 \[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
 dado los límites de la velocidad angular de las ruedas.
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\section{Car-like}
-\label{sec:org24f21de}
-
-\begin{frame}[label={sec:orga1282c5}]{Robots tipo coche - modelo bicicleta}
-\begin{columns}
-\begin{column}{0.4\columnwidth}
-\begin{center}
- \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
-\end{center}
-\end{column}
-
-\begin{column}{0.6\columnwidth}
-\pause
-
-Para un robot que se mueve instantaneamente en una trayectoria círcular con radie \(R\), la relación entre su velocidad lineal \(v\) y su velocidad angular \(\omega\) es
-
-\pause
-
-\[ v = R\omega \quad \Rightleftarrow \quad \omega = \frac{1}{R} v \]
-
-\pause
-\alert{Actividad} Determine el radie de giro instantaneo \(R\) como función del ángulo de dirección \(\phi\).
-
-\pause
-\alert{Actividad} Determine la velocidad angular \(\omega\) como función de la velocidad \(v\) y del ángulo de dirección \(\phi\). Determine también la función inversa.
-\end{column}
-\end{columns}
-\end{frame}
-
-
-
-\begin{frame}[label={sec:org245cca2}]{Robots tipo coche - modelo bicicleta}
-\begin{columns}
-\begin{column}{0.4\columnwidth}
-\begin{center}
- \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
-\end{center}
-\end{column}
-
-\begin{column}{0.6\columnwidth}
-Para cierto robot
-\[ v \in [-v_{lm}, v_{um}], \quad \phi \in [-\phi_{max}, \phi_{max}]\]
-
-
-\pause
-
-\alert{Actividad} En el plano \(v,\, \omega\), dibuje la región de posibles valores de la señal de entrada al modelo canónico,
-\[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
-dado los límites de la velocidad \(v\) y del ángulo de dirección \(\phi\).
 \end{column}
 \end{columns}
 \end{frame}
