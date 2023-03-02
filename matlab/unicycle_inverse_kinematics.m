@@ -3,8 +3,8 @@ function wangvel = unicycle_inverse_kinematics(u)
 %
 % Inputs
 % -------
-% u(1) : The linear velocity in m/s
-% u(2) : The angular velocity in rad/s
+% u(1) : The angular velocity in m/s
+% u(2) : The linear velocity in rad/s
 % u(3) : The distance between the wheels in m
 % u(4) : The radius of the wheels in m
 %
@@ -18,17 +18,18 @@ if nargin == 0
     return
 end
 
-v = u(1);
-w = u(2);
+w = u(1);
+v = u(2);
 d = u(3);
 r = u(4);
 
-wR = (v + w*d/2)/r;
-wL = (v - (w*d/2))/r;
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Your implementation here
+% wL = 
+% wR = 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 wangvel = [wL;wR];
-% Your implementation here
 
 
 
