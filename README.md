@@ -3,3 +3,4 @@ ROS packages, Simulink models, slides and jupyter notebooks for the module Mobil
 
 Here are good material and references for mobile robots:
 - [Control of Mobile robots](https://www.mathworks.com/academia/courseware/control-mobile-robots.html) Free courseware for MOOC by Magnus Egerstedt.
+- [Learning material](https://www.ipb.uni-bonn.de/online-training-robotics/) by Cyrill Stachniss
