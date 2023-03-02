@@ -1,0 +1,278 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169]
+#+OPTIONS: H:2
+# #+BEAMER_THEME: Madrid
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+     
+#+LaTex_HEADER: \usepackage{khpreamble, euscript}
+#+LaTex_HEADER: \DeclareMathOperator{\atantwo}{atan2}
+#+LaTex_HEADER: \newcommand*{\ctrb}{\EuScript{C}}
+#+LaTex_HEADER: \newcommand*{\obsv}{\EuScript{O}}
+
+#+title:  El modelo canónico de robots móviles no-holonómicos
+# #+date: 2018-04-05
+
+* What do I want the students to understand?			   :noexport:
+- The dynamics of the unicycle model
+
+* Activities                                                       :noexport:
+- Program function that takes linear and angular velocity in SI measurements as input  and
+  computes the velocity of each wheel.
+- Implement open-loop control to move roverbot in square.
+  
+
+* Mobile robots
+
+* Repetiión
+
+** De robot diferencial a modelo canónico
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model-details}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+
+#+BEAMER: \pause
+
+*Actividad* Encuentra las relaciones entre (\(\omega,\, v\)) y (\(\omega_L, \,\omega_R\))
+
+#+BEAMER: \pause
+
+#+begin_export latex
+\begin{align*}
+  v &= \frac{v_L + v_R}{2} = \frac{r}{2} \big(\omega_L + \omega_L\big)\\
+  \omega &= \frac{v_R - v_L}{d} = \frac{r}{d} \big(\omega_R - \omega_L\big)
+\end{align*}
+
+\begin{align*}
+  \omega_L &= \frac{v_L}{r} = \frac{1}{r} \big(v - \frac{d}{2} \omega\big)\\
+  \omega_R &= \frac{v_R}{r} = \frac{1}{r} \big(v + \frac{d}{2} \omega\big)
+ \end{align*}
+
+#+end_export
+
+*** Notes                                                          :noexport:
+
+1. v = r \omega
+2. Origin in midpoint. Travelling instantaneously in direction v, with magnitude |v|
+   w = -(v_L-v)/(d/2) = (v_R-v)/(d/2)  =>  v-v_L = -v + v_R   =>  v = 0.5(v_L + v_R)
+   Continuous change from v_R to v_L, so at midpoint
+3. w = (v_R - v)/(d/2) = (v_R - 0.5v_R - 0.5v_L)/(d/2) = (v_R - v_L)/2/(d/2) = (v_R - v_L)/d
+4. 0.5v_L + 0.5v_R = v
+   -v_L + v_R = w*d
+
+   0.5v_R + 0.5v_R = v+w*d/2  => v_R = v + w*d/2 => w_R = (v + w*d/2)/r
+
+   v_L = -wd + v_R = v - w*d/2                   => w_L = (v-w*d/2)/r
+
+** Diferencial a modelo canónico
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=.8\linewidth]{../figures/unicycle-model-details}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+
+Asumiendo simetría entre las dos ruedas y en la dirección de giro.
+
+\[ \omega_L,\, \omega_R \; \in \; [-\omega_{max}, \omega_{max}]\]
+
+#+BEAMER: \pause
+
+*Actividad*
+En el plano \(v,\, \omega\),  dibuje la región de posibles valores de la señal de entrada al modelo canónico,
+\[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
+dado los límites de la velocidad angular de las ruedas.
+
+
+*** Notes                                                          :noexport:
+
+- vmax = \wmax * r
+- wmax = vmax/(d/2) = 2 vmax /d
+
+** Diferencial a modelo canónico
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=.8\linewidth]{../figures/unicycle-model-details}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+
+#+begin_export latex
+\begin{center}
+  \begin{tikzpicture}[scale=1]
+  \pgfmathsetmacro{\wwmax}{16}
+  \pgfmathsetmacro{\dd}{2}
+  \pgfmathsetmacro{\rr}{0.1}
+  \pgfmathsetmacro{\vmax}{\rr * \wwmax}
+  \pgfmathsetmacro{\wmax}{2*\wwmax * \rr / \dd}
+  
+  \draw[green!70!black, fill=green!70]  (0, \wmax) node[left] {$2\frac{r}{d}\omega_{max}$}
+  --  (\vmax, 0)
+  node[below right] {$r\omega_{max}$} -- (0, -\wmax) node[left]{$-2\frac{r}{d}\omega_{max}$}
+  --  (-\vmax, 0) node[below left] {$-r\omega_{max}$} -- (0, \wmax);
+  
+  \draw[->] (-2,0) -- (2, 0) node[right] {$v$};
+  \draw[->] (0,-2) -- (0,2) node[above] {$\omega$};
+\end{tikzpicture}
+\end{center}
+
+#+end_export
+
+*** Notes                                                          :noexport:
+
+- vmax = \wmax * r
+- wmax = vmax/(d/2) = 2 vmax /d
+
+** Implementación                                                  :noexport:
+
+Notebook en google colab (página en Canvas)
+
+
+* Car-like
+
+** Robots tipo coche - modelo bicicleta
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+#+BEAMER: \pause
+
+Para un robot que se mueve instantaneamente en una trayectoria círcular con radie $R$, la relación entre su velocidad lineal $v$ y su velocidad angular $\omega$ es
+
+#+BEAMER: \pause
+
+\[ v = R\omega \quad \Rightleftarrow \quad \omega = \frac{1}{R} v \]
+
+#+BEAMER: \pause
+*Actividad* Determine el radie de giro instantaneo $R$ como función del ángulo de dirección $\phi$.
+
+#+BEAMER: \pause
+*Actividad* Determine la velocidad angular $\omega$ como función de la velocidad $v$ y del ángulo de dirección $\phi$. Determine también la función inversa.
+
+
+*** Notes                                                          :noexport:
+
+1. l/R = tan \phi => R = l/tan(\phi) = l * cos(\phi)/sin(\phi) = l cot(\phi)
+2. w = v/R = v/l * tan(\phi)
+   
+
+
+** Robots tipo coche - modelo bicicleta
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.05\linewidth]{../figures/bicycle-model}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+Para cierto robot
+\[ v \in [-v_{lm}, v_{um}], \quad \phi \in [-\phi_{max}, \phi_{max}]\]
+
+
+#+BEAMER: \pause
+
+*Actividad* En el plano \(v,\, \omega\), dibuje la región de posibles valores de la señal de entrada al modelo canónico,
+\[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
+dado los límites de la velocidad $v$ y del ángulo de dirección $\phi$.
+
+*** Notes                                                          :noexport:
+
+- vlimites -> dados
+- Max angulo de direcc => max vel angular. => wmax = v * (tan(phi)/l)
+
+** Implementación                                                  :noexport:
+
+Notebook en google colab (página en Canvas)
+
+
+* Control en lazo abierto                                          :noexport:
+
+** Control en lazo abierto
+
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+#+BEAMER: \pause
+
+Queremos manejar el robot de un estado inicial a otro estando. Es decir eligir una señal de entrada
+$$ u(t) = \begin{bmatrix} v(t)\\\omega_t \end{bmatrix}, \; t \in [0,\, t_1) $$
+que mueve el robot de una posición y orientación inicial ($x(0)$, $y(0)$, $\theta(0)$) a otra posición y orientación en $t_1$ segundos.
+
+#+BEAMER: \pause
+
+*Actividad*
+
+Dibuje la señal de entrada que 
+1) mueve el robot una distancia 1m derecho en 3 segundos.
+2) cambia la dirección del robot 90 grados hacia izquierda.
+3) mueve el robot en una trayectoria de forma cuadrada con lados de 1 metros en 20 segundos.
+
+** Implementación del control en lazo abierto
+
+Simulink
+
+
+
+
+
+
+
+
+
