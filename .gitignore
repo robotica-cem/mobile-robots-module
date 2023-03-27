@@ -142,3 +142,4 @@ dmypy.json
 *build_isolated/
 *devel_isolated/
 *install_isolated/
+.*~
