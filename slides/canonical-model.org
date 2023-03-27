@@ -83,7 +83,7 @@ El conjunto de información sobre el pasado del sistema necesario para predicir 
     
 #+BEAMER: \pause
 
-*Actividad* En simulink
+# *Actividad* En simulink
 
 *** Notes                                                          :noexport:
 - *Block-model*
