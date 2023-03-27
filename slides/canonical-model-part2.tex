@@ -1,4 +1,4 @@
-% Created 2023-02-27 Mon 13:07
+% Created 2023-03-01 Wed 09:36
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -34,62 +34,12 @@
 \maketitle
 
 \section{Mobile robots}
-\label{sec:orgf5e9929}
+\label{sec:org22ae9bb}
 
-\begin{frame}[label={sec:org246f7e3}]{Modelo canónico a.k.a modelo uniciclo}
-\begin{center}
- \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
-\end{center}
+\section{Repetiión}
+\label{sec:org33436d3}
 
-\footnotesize
-De Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots with prescribed performance guarantees}. KTH - Royal Institute of Technology, Sweden.
-\end{frame}
-
-
-\section{Differential drive}
-\label{sec:orga2e1772}
-
-\begin{frame}[label={sec:orgd1e1a58}]{Robot tipo diferencial (\emph{differential drive})}
-\begin{center}
- \includegraphics[width=.5\linewidth]{../figures/X80Pro.jpg}
-\end{center}
-
-X80Pro Dr. Robot Inc.
-\end{frame}
-
-\begin{frame}[label={sec:org7068cbf}]{Robot móvil - modelo canónico}
-\begin{columns}
-\begin{column}{0.4\columnwidth}
-\begin{center}
- \includegraphics[width=.3\linewidth]{../figures/X80Pro.jpg}
-\end{center}
-\begin{center}
- \includegraphics[width=1.0\linewidth]{../figures/unicycle-model}
-\end{center}
-\end{column}
-
-\begin{column}{0.6\columnwidth}
-\pause
-
-\alert{Cinemática}
-
-\[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
-
-
-
-\[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
-
-
-\pause
-
-\alert{Actividad} En simulink
-\end{column}
-\end{columns}
-\end{frame}
-
-
-
-\begin{frame}[label={sec:orga51798f}]{De robot diferencial a modelo canónico}
+\begin{frame}[label={sec:org9a790ed}]{De robot diferencial a modelo canónico}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -100,23 +50,24 @@ X80Pro Dr. Robot Inc.
 \begin{column}{0.6\columnwidth}
 \pause
 
-\alert{Actividad} Determine
+\alert{Actividad} Encuentra las relaciones entre (\(\omega,\, v\)) y (\(\omega_L, \,\omega_R\))
 
-\begin{enumerate}
-\item La velocidad lineal (\(v_R\), \(v_L\)) del centro de cada rueda dado su velocidad angular (\(\omega_R\), \(\omega_L\))
+\pause
 
-\item La velocidad lineal \(v\) del centro robot dado las dos velocidades \(v_R\) y \(v_L\)
+\begin{align*}
+  v &= \frac{v_L + v_R}{2} = \frac{r}{2} \big(\omega_L + \omega_L\big)\\
+  \omega &= \frac{v_R - v_L}{d} = \frac{r}{d} \big(\omega_R - \omega_L\big)
+\end{align*}
 
-\item La velocidad angular \(\omega\) del robot dado las dos velocidades \(v_R\) y \(v_L\)
-
-\item Las relaciones invertidas. Es decir, las velocidades angulares \(\omega_R\) y \(\omega_L\) de las ruedas dado las velocidades \(v\) y \(\omega\).
-\end{enumerate}
+\begin{align*}
+  \omega_L &= \frac{v_L}{r} = \frac{1}{r} \big(v - \frac{d}{2} \omega\big)\\
+  \omega_R &= \frac{v_R}{r} = \frac{1}{r} \big(v + \frac{d}{2} \omega\big)
+ \end{align*}
 \end{column}
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:org6c42443}]{Diferencial a modelo uniciclo}
+\begin{frame}[label={sec:org76e4d08}]{Diferencial a modelo canónico}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -139,11 +90,41 @@ dado los límites de la velocidad angular de las ruedas.
 \end{columns}
 \end{frame}
 
+\begin{frame}[label={sec:orgb1fb872}]{Diferencial a modelo canónico}
+\begin{columns}
+\begin{column}{0.4\columnwidth}
+\begin{center}
+ \includegraphics[width=.8\linewidth]{../figures/unicycle-model-details}
+\end{center}
+\end{column}
+
+\begin{column}{0.6\columnwidth}
+\begin{center}
+  \begin{tikzpicture}[scale=1]
+  \pgfmathsetmacro{\wwmax}{16}
+  \pgfmathsetmacro{\dd}{2}
+  \pgfmathsetmacro{\rr}{0.1}
+  \pgfmathsetmacro{\vmax}{\rr * \wwmax}
+  \pgfmathsetmacro{\wmax}{2*\wwmax * \rr / \dd}
+  
+  \draw[green!70!black, fill=green!70]  (0, \wmax) node[left] {$2\frac{r}{d}\omega_{max}$}
+  --  (\vmax, 0)
+  node[below right] {$r\omega_{max}$} -- (0, -\wmax) node[left]{$-2\frac{r}{d}\omega_{max}$}
+  --  (-\vmax, 0) node[below left] {$-r\omega_{max}$} -- (0, \wmax);
+  
+  \draw[->] (-2,0) -- (2, 0) node[right] {$v$};
+  \draw[->] (0,-2) -- (0,2) node[above] {$\omega$};
+\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
 
 \section{Car-like}
-\label{sec:org24f21de}
+\label{sec:org55d7b13}
 
-\begin{frame}[label={sec:orga1282c5}]{Robots tipo coche - modelo bicicleta}
+\begin{frame}[label={sec:orgb0b4836}]{Robots tipo coche - modelo bicicleta}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -171,7 +152,7 @@ Para un robot que se mueve instantaneamente en una trayectoria círcular con rad
 
 
 
-\begin{frame}[label={sec:org245cca2}]{Robots tipo coche - modelo bicicleta}
+\begin{frame}[label={sec:org7fbcf45}]{Robots tipo coche - modelo bicicleta}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}

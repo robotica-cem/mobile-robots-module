@@ -26,84 +26,7 @@
 
 * Mobile robots
 
-** El concepto de /estado/                                         :noexport:
-
-#+BEAMER: \pause
-
-#+begin_quote
-El conjunto de información sobre el pasado del sistema necesario para predicir el comportamiento del sistema en el futuro (dado todas las señales de entrada)
-#+end_quote
-
-** Modelo canónico a.k.a modelo uniciclo
-    \begin{center}
-     \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
-    \end{center}
-
-    \footnotesize
-    De Martina Zambelli (2013) /Posture regulation for unicycle-like robots with prescribed performance guarantees/. KTH - Royal Institute of Technology, Sweden.
-
-
-* Differential drive
-
-** Robot tipo diferencial (/differential drive/)
-    \begin{center}
-     \includegraphics[width=.5\linewidth]{../figures/X80Pro.jpg}
-    \end{center}
-
-    X80Pro Dr. Robot Inc.
-    
-** Robot móvil - modelo canónico
-*** Graphics
-:PROPERTIES:
-:BEAMER_col: 0.4
-:END:
-
-    \begin{center}
-     \includegraphics[width=.3\linewidth]{../figures/X80Pro.jpg}
-    \end{center}
-    \begin{center}
-     \includegraphics[width=1.0\linewidth]{../figures/unicycle-model}
-    \end{center}
-
-*** Text
-:PROPERTIES:
-:BEAMER_col: 0.6
-:END:
-
-#+BEAMER: \pause
-
-*Cinemática*
-
-    \[ \xi = \begin{bmatrix} \theta\\x\\y \end{bmatrix},   \quad u = \begin{bmatrix} \omega\\v \end{bmatrix}\]
-
-
-
-    \[\frac{d}{dt} \xi = \begin{bmatrix} \dot{\theta}\\\dot{x}\\\dot{y} \end{bmatrix} = \begin{bmatrix} \omega\\ v\cos\theta\\v\sin\theta\end{bmatrix} \]
-
-    
-#+BEAMER: \pause
-
-*Actividad* En simulink
-
-*** Notes                                                          :noexport:
-- *Block-model*
-  - input w,v
-  - output complete state
-- *State-space model*
-  - \dot{\xi} = f(\xi, u)
-  - y = [\theta, x, y] = \xi
-- *Simulink*
-- Make submodel -> two inputs, -> three outputs
-- Add three integrators, label
-- Add XY-scope and regular scope
-- Link x and y to XY-scope, link theta to other scope
-- Add two sources for the control inputs \omega and v.
-- Leave the rest to the students.
-- Goal: Make robot move in circular of radius 2m, finishing the revolution in 10s
-  - Angular vel: \omega = 2*pi/10
-  - Linear vel: 2*pi*r/10
-
-
+* Repetiión
 
 ** De robot diferencial a modelo canónico
 *** Graphics
@@ -123,16 +46,22 @@ El conjunto de información sobre el pasado del sistema necesario para predicir 
 
 #+BEAMER: \pause
 
-*Actividad* Determine
+*Actividad* Encuentra las relaciones entre (\(\omega,\, v\)) y (\(\omega_L, \,\omega_R\))
 
-1) La velocidad lineal ($v_R$, $v_L$) del centro de cada rueda dado su velocidad angular ($\omega_R$, $\omega_L$)
+#+BEAMER: \pause
 
-2) La velocidad lineal $v$ del centro robot dado las dos velocidades $v_R$ y $v_L$
+#+begin_export latex
+\begin{align*}
+  v &= \frac{v_L + v_R}{2} = \frac{r}{2} \big(\omega_L + \omega_L\big)\\
+  \omega &= \frac{v_R - v_L}{d} = \frac{r}{d} \big(\omega_R - \omega_L\big)
+\end{align*}
 
-3) La velocidad angular $\omega$ del robot dado las dos velocidades $v_R$ y $v_L$
+\begin{align*}
+  \omega_L &= \frac{v_L}{r} = \frac{1}{r} \big(v - \frac{d}{2} \omega\big)\\
+  \omega_R &= \frac{v_R}{r} = \frac{1}{r} \big(v + \frac{d}{2} \omega\big)
+ \end{align*}
 
-
-4) Las relaciones invertidas. Es decir, las velocidades angulares $\omega_R$ y $\omega_L$ de las ruedas dado las velocidades $v$ y $\omega$.
+#+end_export
 
 *** Notes                                                          :noexport:
 
@@ -175,6 +104,48 @@ En el plano \(v,\, \omega\),  dibuje la región de posibles valores de la señal
 \[ u(t) = \begin{bmatrix} \omega(t)\\v(t) \end{bmatrix}, \]
 dado los límites de la velocidad angular de las ruedas.
 
+
+*** Notes                                                          :noexport:
+
+- vmax = \wmax * r
+- wmax = vmax/(d/2) = 2 vmax /d
+
+** Diferencial a modelo canónico
+*** Graphics
+:PROPERTIES:
+:BEAMER_col: 0.4
+:END:
+
+    \begin{center}
+     \includegraphics[width=.8\linewidth]{../figures/unicycle-model-details}
+    \end{center}
+
+*** Text
+:PROPERTIES:
+:BEAMER_col: 0.6
+:END:
+
+
+#+begin_export latex
+\begin{center}
+  \begin{tikzpicture}[scale=1]
+  \pgfmathsetmacro{\wwmax}{16}
+  \pgfmathsetmacro{\dd}{2}
+  \pgfmathsetmacro{\rr}{0.1}
+  \pgfmathsetmacro{\vmax}{\rr * \wwmax}
+  \pgfmathsetmacro{\wmax}{2*\wwmax * \rr / \dd}
+  
+  \draw[green!70!black, fill=green!70]  (0, \wmax) node[left] {$2\frac{r}{d}\omega_{max}$}
+  --  (\vmax, 0)
+  node[below right] {$r\omega_{max}$} -- (0, -\wmax) node[left]{$-2\frac{r}{d}\omega_{max}$}
+  --  (-\vmax, 0) node[below left] {$-r\omega_{max}$} -- (0, \wmax);
+  
+  \draw[->] (-2,0) -- (2, 0) node[right] {$v$};
+  \draw[->] (0,-2) -- (0,2) node[above] {$\omega$};
+\end{tikzpicture}
+\end{center}
+
+#+end_export
 
 *** Notes                                                          :noexport:
 

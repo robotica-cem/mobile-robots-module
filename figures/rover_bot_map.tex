@@ -11,7 +11,7 @@
   \draw[fill, black!60] (-3mm, -1mm) rectangle (3mm, 1mm); }
 
 \newcommand{\robot}{%
-  \node[anchor=center,circle, draw, inner sep=2.5mm] at (0,0) {};
+  \node[anchor=center,circle, draw, inner sep=2mm] at (0,0) {};
   \begin{scope}[xshift=2mm, yshift=7mm]
     \wheel
   \end{scope}
@@ -34,8 +34,8 @@
   \draw[fill, orange!20!white] (-6, -5)  rectangle (6,5);
   \draw[step=1cm, blue!20!white, very thin] (-6, -5) grid (6,5);
 
-  \draw[->] (0,0) to (6.3cm, 0);
-  \draw[->] (0,0) to (0, 5.3cm);
+  \draw[->, blue!70!black, thick] (0,0) to (6.6cm, 0) node[right] {$x$};
+  \draw[->, blue!70!black, thick] (0,0) to (0, 5.6cm) node[above] {$y$};
 
   \begin{scope}[xshift=-6cm, yshift=-5cm]
     \wall{10}{\wthickness}
@@ -66,11 +66,23 @@
     \wall{\wthickness}{3cm}
   \end{scope}
 
-  \begin{scope}[xshift=-4.5cm, yshift=-4cm, scale=0.5]
+  \begin{scope}[xshift=1cm, yshift=-5cm]
+    \wall{1.2cm}{\wthickness}
+  \end{scope}
+
+  \begin{scope}[xshift=4cm, yshift=-2cm]
+    \wall{1.2cm}{\wthickness}
+  \end{scope}
+
+  \begin{scope}[xshift=-6cm, yshift=0cm]
+    \wall{\wthickness}{1.6cm}
+  \end{scope}
+
+  \begin{scope}[xshift=-4.5cm, yshift=-4cm, scale=0.4]
     \robot
   \end{scope}
 
-  \node[circle, draw, inner sep=0.2mm, red!60!black, pin=20:{(3m, 3m)}] at (3,3) {Goal!};
+  \node[circle, draw, inner sep=0.2mm, red!60!black, pin=10:{(2m, -1m)}] at (2,-1) {Goal!};
   
 \end{tikzpicture}
 \end{document}

@@ -186,7 +186,7 @@ dado los límites de la velocidad angular de las ruedas.
 Notebook en google colab (página en Canvas)
 
 
-* Car-like
+* Car-like                                                         :noexport:
 
 ** Robots tipo coche - modelo bicicleta
 *** Graphics

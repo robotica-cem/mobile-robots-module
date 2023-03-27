@@ -1,0 +1,49 @@
+\documentclass[margin=5mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf,tikz, pgfplots}
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+\pgfplotsset{compat=newest}
+
+\makeatletter
+\newcommand{\gettikzxy}[3]{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax
+  \edef#2{\the\pgf@x}%
+  \edef#3{\the\pgf@y}%
+}
+\makeatother
+
+  \begin{document}
+
+  \begin{tikzpicture}[node distance=20mm, anchor=north,
+    waypoint/.style={circle, inner sep=0.4mm, red!60!black, draw},
+    robotpath/.style={dashed, thick, blue!30!white},
+    lookcircle/.style={dotted, green!60!black},
+    ]
+
+    \node[coordinate] (O) at (0,0) {};
+    \def\pxx{4}
+    \def\pyy{3}
+    \pgfmathsetmacro{\RR}{(\pxx*\pxx + \pyy*\pyy)/2/\pyy}
+    \pgfmathsetmacro{\aa}{\RR - \pyy}
+
+    \node[waypoint, anchor=center, pin=60:{$p_g$}] (wp) at (-\pyy, \pxx) {};
+    \node[coordinate] (icr) at (-\RR, 0) {};
+    
+    \draw[->] (0,0) to node[below, pos=0.99] {$y_b$} (-6cm, 0) ;
+    \draw[->] (0,0) to (0, 6cm) node[right] {$x_b$};
+
+    \draw[robotpath] (0,0) arc[radius = \RR, start angle = 0, end angle = 80];
+
+    \draw[] (-\RR, 0) -- ++(0, -2mm) node[below] {$R$};
+    \draw[] (-\pyy, 0) -- ++(0, -2mm) node[below] {$p_y$};
+    \draw[] (0, \pxx) -- ++(2mm, 0) node[right] {$p_x$};
+
+    \draw[green!70!black] (wp) -- node[left] {$R$} (icr);
+    \draw[green!70!black] (wp) -- node[right] {$p_x$} (-\pyy, 0);
+    \draw[green!70!black]  (-\pyy, 0) -- node[above] {$a$} (icr);
+
+
+  \end{tikzpicture}
+\end{document}
