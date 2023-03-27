@@ -139,3 +139,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+*build_isolated/
+*devel_isolated/
+*install_isolated/
