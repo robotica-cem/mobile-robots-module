@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <launch>
   <rosparam command="load" file="$(find puzzlebot_nav2d)/config/params.yaml" />
   <rosparam command="load" file="$(find puzzlebot_nav2d)/config/waypoints.yaml" />

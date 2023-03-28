@@ -22,12 +22,13 @@
   <!--load robot description -->
    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find puzzlebot_gazebo)/urdf/puzzlebotwithlidar.xacro'" />
 
-    <arg name="x" default="-4"/>
+    <arg name="x" default="-4.5"/>
     <arg name="y" default="-4"/>
     <arg name="z" default="0.0"/>
-
+    <arg name="yaw" default="1.57"/>
+<!-- https://answers.ros.org/question/40627/how-do-i-set-the-inital-pose-of-a-robot-in-gazebo/ -->
   <node name="puzzlebot_spawn" pkg="gazebo_ros" type="spawn_model"  output="screen"
-          args="-urdf -param robot_description -model puzzlebot -x $(arg x) -y $(arg y) -z $(arg z)" />
+          args="-urdf -param robot_description -model puzzlebot -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw)" />
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
   </node>
