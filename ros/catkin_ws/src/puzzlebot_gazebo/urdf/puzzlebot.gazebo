@@ -31,7 +31,8 @@
   <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
   </plugin>
 </gazebo>
-   
+
+<!--
   <gazebo reference="camera">
     <material>Gazebo/Blue</material>
     <sensor type="camera" name="camera">
@@ -62,6 +63,8 @@
         <distortionT1>0.0</distortionT1>
         <distortionT2>0.0</distortionT2>
       </plugin>
-    </sensor>
+      </sensor>
+
   </gazebo> 
+-->
 </robot>
