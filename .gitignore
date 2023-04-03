@@ -144,3 +144,4 @@ dmypy.json
 *devel_isolated/
 *install_isolated/
 .*~
+.config/
