@@ -96,6 +96,45 @@ class MyOdometryPublisher():
             self.y_pub.publish(y_est)
             self.th_pub.publish(th_est)
                     
+
+
+def diffdrive2canonical(wL, wR, r=WHEEL_RADIUS, d=WHEEL_DISTANCE):
+    """
+    Returns the linear and angular velocity of the canonical robot model given the 
+    angular velocities of each wheel.
+    
+    Arguments
+    ---------
+       wL  :  float 
+              The angular velocity of the left wheel in rad/s.
+       wR  :  float 
+              The angular velocity of the right wheel in rad/s.
+              
+    Returns
+    --------
+       w  :  float 
+             The angular velocity of the canonical model in rad/s.
+       v  :  float 
+             The linear velocity of the canonical model in m/s.
+             
+    Tests
+    ------
+    1) Equal but opposite angular velocities give only angular velocity.
+    >>> w, v = diffdrive2canonical(1,-1)
+    >>> print("v = %0.1f" % (v))
+    v = 0.0
+    
+    2) Equal angular velocities give only linear velocity
+    >>> w, v = diffdrive2canonical(1,1)
+    >>> print("w = %0.1f" % (w))
+    w = 0.0
+    
+    """
+    
+    w = 1
+    v = 1
+    return (w,v)
+
 if __name__ == '__main__':
 
     try:

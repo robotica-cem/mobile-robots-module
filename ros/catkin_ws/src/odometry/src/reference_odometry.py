@@ -99,7 +99,7 @@ class OdometryPublisher():
 
         # Subscribe to the model_states topic to obtain the position and heading of the puzzlebot
         rospy.Subscriber("gazebo/model_states", ModelStates, self.callback)
-        # Publish the bot pose to a topic
+        # Publish the true bot pose to a topic
         self.odom_pub = rospy.Publisher("/true_odometry", Odometry, queue_size=1)
         # Publish the simpler state to separate topics
         self.x_pub = rospy.Publisher("/bot_state/x", Float64, queue_size=1)
