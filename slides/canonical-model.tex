@@ -1,4 +1,4 @@
-% Created 2023-02-27 Mon 13:07
+% Created 2023-03-27 Mon 11:01
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -34,9 +34,9 @@
 \maketitle
 
 \section{Mobile robots}
-\label{sec:orgf5e9929}
+\label{sec:orgc1221b0}
 
-\begin{frame}[label={sec:org246f7e3}]{Modelo canónico a.k.a modelo uniciclo}
+\begin{frame}[label={sec:org89e29e8}]{Modelo canónico a.k.a modelo uniciclo}
 \begin{center}
  \includegraphics[width=.6\linewidth]{../figures/unicycle-kth.png}
 \end{center}
@@ -47,9 +47,9 @@ De Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots wit
 
 
 \section{Differential drive}
-\label{sec:orga2e1772}
+\label{sec:orge3598b7}
 
-\begin{frame}[label={sec:orgd1e1a58}]{Robot tipo diferencial (\emph{differential drive})}
+\begin{frame}[label={sec:orgab0c5d3}]{Robot tipo diferencial (\emph{differential drive})}
 \begin{center}
  \includegraphics[width=.5\linewidth]{../figures/X80Pro.jpg}
 \end{center}
@@ -57,7 +57,7 @@ De Martina Zambelli (2013) \emph{Posture regulation for unicycle-like robots wit
 X80Pro Dr. Robot Inc.
 \end{frame}
 
-\begin{frame}[label={sec:org7068cbf}]{Robot móvil - modelo canónico}
+\begin{frame}[label={sec:orgabe4a8e}]{Robot móvil - modelo canónico}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -81,15 +81,13 @@ X80Pro Dr. Robot Inc.
 
 
 \pause
-
-\alert{Actividad} En simulink
 \end{column}
 \end{columns}
 \end{frame}
 
 
 
-\begin{frame}[label={sec:orga51798f}]{De robot diferencial a modelo canónico}
+\begin{frame}[label={sec:org7644e02}]{De robot diferencial a modelo canónico}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -108,15 +106,17 @@ X80Pro Dr. Robot Inc.
 \item La velocidad lineal \(v\) del centro robot dado las dos velocidades \(v_R\) y \(v_L\)
 
 \item La velocidad angular \(\omega\) del robot dado las dos velocidades \(v_R\) y \(v_L\)
+\end{enumerate}
 
+
+\begin{enumerate}
 \item Las relaciones invertidas. Es decir, las velocidades angulares \(\omega_R\) y \(\omega_L\) de las ruedas dado las velocidades \(v\) y \(\omega\).
 \end{enumerate}
 \end{column}
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:org6c42443}]{Diferencial a modelo uniciclo}
+\begin{frame}[label={sec:org3ccb856}]{Diferencial a modelo canónico}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -141,9 +141,9 @@ dado los límites de la velocidad angular de las ruedas.
 
 
 \section{Car-like}
-\label{sec:org24f21de}
+\label{sec:orgac9e6dc}
 
-\begin{frame}[label={sec:orga1282c5}]{Robots tipo coche - modelo bicicleta}
+\begin{frame}[label={sec:org7a1a406}]{Robots tipo coche - modelo bicicleta}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -171,7 +171,7 @@ Para un robot que se mueve instantaneamente en una trayectoria círcular con rad
 
 
 
-\begin{frame}[label={sec:org245cca2}]{Robots tipo coche - modelo bicicleta}
+\begin{frame}[label={sec:org5547307}]{Robots tipo coche - modelo bicicleta}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
