@@ -117,7 +117,8 @@ el valor de la función \(y(t_{k+1}) = y(t_k + \Delta t)\) se puede estimar con
 - El displacemiento es dado por \[\vec{d}_k = \Delta t \vec{v}_{k, corr}.\] *¿Se puede mejorar?* 
 *** notes                                                          :noexport:
 
-  
+Indeed. By actually integrating numerically the nonlinear ODE over the
+time-interval \Delta t.  
 
 
 
