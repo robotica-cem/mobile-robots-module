@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Implement a node that calculates the odometry for the puzzlebot robot.
+""" Implement a node that calculates the odometry for the puzzlebot robot based on the angular velocities of the wheels
 """
 
 import numpy as np
