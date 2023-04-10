@@ -1,4 +1,4 @@
-% Created 2022-04-29 Fri 12:41
+% Created 2023-04-09 Sun 21:10
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -34,9 +34,9 @@
 \maketitle
 
 \section{Differential drive}
-\label{sec:orga33e36e}
+\label{sec:org2694e9d}
 
-\begin{frame}[label={sec:org22073fb}]{Robot móvil - modelo canónico}
+\begin{frame}[label={sec:org35aaf78}]{Robot móvil - modelo canónico}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{center}
@@ -60,7 +60,7 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org5e7cc6a}]{El método de Euler para integración numérica}
+\begin{frame}[label={sec:org076c512}]{El método de Euler para integración numérica}
 Dado ecuación diferencial (posiblemente no-lineal y variante en el tiempo)
 \[ \frac{d}{dt} y = f(y,t, u) \]
 y valor inicial \(y(t_k) = y_k\),
@@ -73,7 +73,7 @@ el valor de la función \(y(t_{k+1}) = y(t_k + \Delta t)\) se puede estimar con
 
 
 
-\begin{frame}[label={sec:orgfbc5058}]{Integrando el modelo cinemático}
+\begin{frame}[label={sec:orgecf02f4}]{Integrando el modelo cinemático}
 \small
 
 \begin{columns}
@@ -97,7 +97,7 @@ el valor de la función \(y(t_{k+1}) = y(t_k + \Delta t)\) se puede estimar con
 \end{frame}
 
 
-\begin{frame}[label={sec:org6b48eb3}]{Una mejor approximación}
+\begin{frame}[label={sec:orgd12ceab}]{Una mejor approximación}
 \begin{columns}
 \begin{column}{0.6\columnwidth}
 \begin{center}
@@ -110,11 +110,6 @@ el valor de la función \(y(t_{k+1}) = y(t_k + \Delta t)\) se puede estimar con
 \item Con velocidad angular y linear constante, la trayectoria es un arco de un circulo, con un sector \[\Delta \theta = \omega_k \Delta t.\]
 \item La dirección \(\theta_k + \frac{\Delta \theta}{2}\) da la vector hacía la nueva posición.
 \[\vec{v}_{k, corr} = \begin{bmatrix} v_k \cos(\theta_k + \frac{\Delta \theta}{2})\\v_k\sin(\theta_k + \frac{\Delta \theta}{2})\end{bmatrix}\]
-\end{itemize}
-
-\pause
-\begin{itemize}
-\item El displacemiento es dado por \[\vec{d}_k = \Delta t \vec{v}_{k, corr}.\] \alert{¿Se puede mejorar?}
 \end{itemize}
 \end{column}
 \end{columns}

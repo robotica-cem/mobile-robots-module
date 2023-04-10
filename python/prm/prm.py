@@ -118,8 +118,8 @@ class PRM:
         # Add edges to the roadmap
         for i in range(self.num_nodes):
             for j in range(i + 1, self.num_nodes):
-                if self._path_is_clear(i, j):
-                    self.roadmap.add_edge(i, j, weight=self._distance(i, j))
+                ok, dist = self._path_is_clear(i, j)
+                if ok: self.roadmap.add_edge(i, j, weight=dist)
 
     def _path_is_clear(self, node1: Any, node2: Any) -> Tuple[bool, float]:
         """
