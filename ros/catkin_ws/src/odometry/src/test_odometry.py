@@ -3,7 +3,6 @@ import numpy as np
 import unittest
 from reference_odometry import pose2np,transform_between_poses
 from geometry_msgs.msg import Pose
-from tf import transformations as trf
 
 class TestOdometry(unittest.TestCase):
 
@@ -28,12 +27,21 @@ class TestOdometry(unittest.TestCase):
         pb = Pose() # The pose of the base frame
         pb.orientation.x = np.sin(th/2)
         pb.orientation.w = np.cos(th/2)
-
+        # Explanation to the above:
+        # The quaternion representing a rotation of pi/2 around the x axis is given by
+        #
         pf = Pose() # The pose of the follower frame
 
         t = transform_between_poses(pb, pf)
 
         print(t)
+        # The base frame is rotated by pi/2 around the x axis, so the rigid transform betweed the two frames,
+        # which transforms points given in the follower frame to the base frame, is a rotation of -pi/2 around x.
+        # In particular, the rotation matrix is given by
+        # R = [[1, 0, 0],
+        #      [0, 0, 1],
+        #      [0, -1, 0]]
+
         texp = np.array([[1, 0, 0, .0],
                          [0, 0, 1, 0],
                          [0, -1, 0, 0],

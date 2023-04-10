@@ -99,7 +99,7 @@ class OdometryPublisher():
 
         # Subscribe to the model_states topic to obtain the position and heading of the puzzlebot
         rospy.Subscriber("gazebo/model_states", ModelStates, self.callback)
-        # Publish the bot pose to a topic
+        # Publish the true bot pose to a topic
         self.odom_pub = rospy.Publisher("/true_odometry", Odometry, queue_size=1)
         # Publish the simpler state to separate topics
         self.x_pub = rospy.Publisher("/bot_state/x", Float64, queue_size=1)
@@ -110,7 +110,10 @@ class OdometryPublisher():
         self.model_twist = None
         self.initial_state = None
 
-        # For broadcasting transform from base_link to odom_true 
+        # For broadcasting transform between the odometry frame (fixed and coinciding with the base_frame at time=0)
+        # and the base_link frame. It is the rotation and translation of the base_link frame with respect to the
+        # odometry frame. It is at the same time the transform that takes a vector or point expressed in the base_link frame
+        # and expresses it in the odometry frame.
         self.br = tf2_ros.TransformBroadcaster() 
         # For broadcasting the static transform from odom_true to world
         self.brStatic = tf2_ros.StaticTransformBroadcaster()

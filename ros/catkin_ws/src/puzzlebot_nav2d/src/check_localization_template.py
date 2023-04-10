@@ -40,16 +40,6 @@ class LocalizationComparator():
 
             if self.odom is not None and self.true_odom is not None:
                 
-                #----------------------------------------------------------------------------
-                # Your code here
-                #
-                # Compute the transformation between the two poses contained
-                # in odom and true_odom
-                # Compute the error in absolute distance, and the error in
-                # absolute angle 
-                #
-                #----------------------------------------------------------------------------
-
                 pos0 = self.true_odom.pose.pose.position
                 orient0 = self.true_odom.pose.pose.orientation
                 pos1 = self.odom.pose.pose.position

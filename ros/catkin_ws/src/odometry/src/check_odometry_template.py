@@ -10,7 +10,6 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Vector3, TransformStamped, PoseWithCovariance,TwistWithCovariance
 from std_msgs.msg import Float32
 
-
 class OdometryComparator():
     def __init__(self):
 
@@ -30,9 +29,9 @@ class OdometryComparator():
         self.odom = None
         
     def _true_odom_callback(self, data):
-        self.true_odom = data.data
+        self.true_odom = data
     def _odom_callback(self, data):
-        self.odom = data.data
+        self.odom = data
         
         
     def main(self):
@@ -42,17 +41,30 @@ class OdometryComparator():
             self.rate.sleep()
 
             if self.odom is not None and self.true_odom is not None:
-                
+                pos0 = self.true_odom.pose.pose.position
+                orient0 = self.true_odom.pose.pose.orientation
+                pos1 = self.odom.pose.pose.position
+                orient1 = self.odom.pose.pose.orientation
+
+                p0 = np.array([pos0.x, pos0.y, pos0.z])
+                q0 = [orient0.x, orient0.y, orient0.z, orient0.w]
+                p1 = np.array([pos1.x, pos1.y, pos1.z])
+                q1 = [orient1.x, orient1.y, orient1.z, orient1.w]
+
                 #----------------------------------------------------------------------------
                 # Your code here
                 #
-                # Compute the transformation between the two poses contained
+                # 1. Compute the transformation between the two poses contained
                 # in odom and true_odom
-                # Compute the error in absolute distance, and the error in
-                # absolute angle 
+                # 2. Compute the error in absolute distance, and the error in
+                # absolute angle
+                # 3. Publish the errors in the topics /odometry_error/distance and /odometry_error/angle
                 #
                 #----------------------------------------------------------------------------
-                    
+
+                self.dist_pub.publish(dist_error)
+                self.ang_pub.publish(angle_error)
+                
 if __name__ == '__main__':
 
     try:

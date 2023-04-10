@@ -17,7 +17,7 @@ class DifferentialController:
            The distance between the two wheels
         wheel_radius  : float
         """
-        self.cmd_vel_listener = rospy.Subscriber('/cmd_val', Twist,
+        self.cmd_vel_listener = rospy.Subscriber('/cmd_vel', Twist,
                                               self.cmd_vel_callback)
         self.wR_pub = rospy.Publisher('/right_wheel_velocity_controller/command' , Float64, queue_size=1 )
         self.wL_pub = rospy.Publisher('/left_wheel_velocity_controller/command' , Float64, queue_size=1 )
@@ -101,7 +101,7 @@ if __name__ == '__main__':
             doctest.testmod()
             sys.exit(0)
 
-    rospy.init_node('Differential controller')
+    rospy.init_node('Differentialcontroller')
     DifferentialController().run()
 
     
