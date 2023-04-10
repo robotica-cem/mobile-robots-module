@@ -113,11 +113,18 @@ el valor de la función \(y(t_{k+1}) = y(t_k + \Delta t)\) se puede estimar con
 - La dirección \( \theta_k + \frac{\Delta \theta}{2}\) da la vector hacía la nueva posición.
   \[\vec{v}_{k, corr} = \begin{bmatrix} v_k \cos(\theta_k + \frac{\Delta \theta}{2})\\v_k\sin(\theta_k + \frac{\Delta \theta}{2})\end{bmatrix}\]
 
-#+BEAMER: \pause
-- El displacemiento es dado por \[\vec{d}_k = \Delta t \vec{v}_{k, corr}.\] *¿Se puede mejorar?* 
 *** notes                                                          :noexport:
+Constant linear velocity v_k gives a displacement along the circumference of the circle equal to v_k\Delta t.
+This is also equal to R\Delta\theta
+The chord has length
+  2Rsin(\Delta\theta/2).
 
-  
+The ratio of the chord to the circumference of the circle segment is
+2Rsin(Dth/2) / (R\Dth) = sin(Dth/2) / (Dth/2) = sinc(Dth/2).
+
+
+Indeed. By actually integrating numerically the nonlinear ODE over the
+time-interval \Delta t.  
 
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Implements a "ground truth" odometry using the model state information from Gazebo.
+""" Simple feedforward control that makes the puzzlebot move in a circle with given radius and linear velocity.
 """
 
 import sys
