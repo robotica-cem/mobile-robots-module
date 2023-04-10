@@ -2,3 +2,4 @@ A new file
 
 A new line
 
+Just a text file
