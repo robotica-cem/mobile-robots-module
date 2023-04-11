@@ -3,6 +3,23 @@
 and the odometry data.
 
 Author: kjartan@tec.mx (Kjartan Halvorsen) with help from github copilot
+
+Notes.
+1) The scan data give information about free space as well as obstacles. Each ray in the scan will cover a number
+of pixels in the map. The map should be updated by setting the pixels covered by the ray to 0 (free) and the last pixel
+to occupied (100). The map should be updated only if the ray range is less than the max_range of the scan.
+2) You should determine the number of points in each scan ray by multiplying the range of the ray by the map resolution.
+Then you convert these points (each corresponding to a pixel) from a robot frame to a map frame using the odometry data.
+3) The map should be updated only if the robot has moved a certain distance since the last update. This is to
+avoid updating the map too often, since it is a somewhat expensive operation.
+4) It can be more efficient to use numpy arrays for the rigid transformations needed to convert scans
+to map coordinates. To make this work, you need to convert the geometry_msgs/TransformStamped to a numpy array.
+See https://answers.ros.org/question/332407/transformstamped-to-transformation-matrix-python/
+With a transform matrix T, you can transform a number of points at once by collecting the points in a numpy array
+and multiplying the array with T.
+To use numpify, you need to install the package ros-meldic-ros-numpy.
+
+
 """
 import sys
 import numpy as np
@@ -61,16 +78,17 @@ class Mapper:
                 # 3) Set pixels along the ray to 0 (free).
                 #--------------------------------------------------------------
                 #--------------------------------------------------------------
-                
-                
+
+
+                # Publish the map
                 np.copyto(self.map.data,  self.map2d.reshape(-1)) # Copy from map2d to 1d data, fastest way
                 self.map.header.stamp = rospy.Time.now()
                 self.map_pub.publish(self.map)
             self.rate.sleep()        
             
 
-    def ray_to_pixels(self, xr, yr, x, y):
-        """ Set the pixels along the ray to 0 (free) and the end point to 100 (occupied).
+def ray_to_pixels(xr, yr, x, y, map_resolution, map):
+        """ Set the pixels along the ray with origin (xr,yr) and with range ending at (x,y) to 0 (free) and the end point to 100 (occupied).
         Arguments
         ---------
         xr : float
@@ -81,6 +99,10 @@ class Mapper:
             x-coordinates of the scan in the map frame
         y : ndarray
             y-coordinates of the scan in the map frame
+        map_resolution : float
+            Resolution of map in pixels/meter
+        map : ndarray
+            The map as a 2d numpy array
         """
         #--------------------------------------------------------------
         # Your code here
@@ -155,7 +177,9 @@ def polar_to_cartesian(r, th):
 
     return (x, y)
 def test_laser_scan():
-    """ Create a test LaserScan message. """
+    """ Create a simple test LaserScan message.
+    There are 3 rays, to the left, straight ahead and to the right.
+    Each ray has range 1.0. """
     scan = LaserScan()
     scan.header.frame_id = 'base_link'
     scan.angle_min = -np.pi/2
