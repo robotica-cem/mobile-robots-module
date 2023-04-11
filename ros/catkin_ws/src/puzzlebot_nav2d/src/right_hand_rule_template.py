@@ -1,4 +1,5 @@
-#!/usr/bin/env python  
+#!/usr/bin/env python
+""" This docstring was added online at github"""
 import sys
 import numpy as np
 import rospy
