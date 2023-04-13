@@ -1,4 +1,6 @@
 #!/usr/bin/env python  
+""" Please  save this file to another name, then implement your
+solution """
 import sys
 import numpy as np
 import rospy
