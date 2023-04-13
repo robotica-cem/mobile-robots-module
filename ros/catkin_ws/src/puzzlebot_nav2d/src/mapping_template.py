@@ -26,6 +26,8 @@ import numpy as np
 import rospy
 from nav_msgs.msg import OccupancyGrid, MapMetaData, Odometry
 from sensor_msgs.msg import LaserScan
+from geometry_msgs.msg import Pose
+from ros_numpy import numpify
 
 class Mapper:
     def __init__(self, map_width, map_height, map_resolution):
@@ -37,16 +39,27 @@ class Mapper:
         map_height : float
             Height of map in pixels (y-axis)
         map_resolution : float
-            Resolution of map in pixels/meter
+            Resolution of map in meter per pixel
         """
         self.scan_listener = rospy.Subscriber('/laser/scan', LaserScan,
                                               self.scan_callback)
-        self.odom_listener = rospy.Subscriber('/odom', Odometry,
+        self.odom_listener = rospy.Subscriber('/true_odometry', Odometry,
                                               self.odom_callback)
         self.map_pub = rospy.Publisher('/map' , OccupancyGrid, queue_size=1 )
         self.rate = rospy.Rate(5.0)
         self.map = OccupancyGrid()
-        self.map.info = MapMetaData(rospy.Time.now(), map_resolution, map_width, map_height, 0, 0, 0)
+        self.map.info.map_load_time = rospy.Time.now()
+        self.map.info.resolution = map_resolution
+        self.map.info.width = map_width
+        self.map.info.height = map_height
+        self.map.info.origin.position.x = -(map_width*map_resolution)/2.0
+        self.map.info.origin.position.y = (map_height*map_resolution)/2.0
+        self.map.info.origin.position.z = 0.0
+        self.map.info.origin.orientation.x = 1.0
+        self.map.info.origin.orientation.y = 0.0
+        self.map.info.origin.orientation.z = 0.0
+        self.map.info.origin.orientation.w = 0.0
+
         self.map.data = np.zeros(map_width*map_height, dtype=np.int8)
         self.map.data[:] = -1 # Unknown
         self.map2d = np.zeros((map_width, map_height), dtype=np.int8) # For computation
@@ -62,7 +75,7 @@ class Mapper:
         """Called when a new odometry message is available. """
         self.odom = msg
 
-    def map(self):
+    def mapit(self):
         while not rospy.is_shutdown():
 
             if self.scan is not None and self.odom is not None:
@@ -79,6 +92,14 @@ class Mapper:
                 #--------------------------------------------------------------
                 #--------------------------------------------------------------
 
+                orig_m, xy_m = scan_to_map_coordinates(self.scan, self.odom, self.map.info.origin)
+
+                # Set the map pixel corresponding to the end point of the ray to 100 (occupied).
+                print(orig_m)
+                for xy_ in xy_m:
+                    #print(xy_)
+                    ray_to_pixels(orig_m[0], orig_m[1], xy_[0], xy_[1], self.map.info.resolution, self.map2d)
+
 
                 # Publish the map
                 np.copyto(self.map.data,  self.map2d.reshape(-1)) # Copy from map2d to 1d data, fastest way
@@ -88,27 +109,79 @@ class Mapper:
             
 
 def ray_to_pixels(xr, yr, x, y, map_resolution, map):
-        """ Set the pixels along the ray with origin (xr,yr) and with range ending at (x,y) to 0 (free) and the end point to 100 (occupied).
-        Arguments
-        ---------
-        xr : float
-            x-coordinate of the robot in the map frame
-        yr : float
-            y-coordinate of the robot in the map frame
-        x : ndarray
-            x-coordinates of the scan in the map frame
-        y : ndarray
-            y-coordinates of the scan in the map frame
-        map_resolution : float
-            Resolution of map in pixels/meter
-        map : ndarray
-            The map as a 2d numpy array
-        """
-        #--------------------------------------------------------------
+    """ Set the pixels along the ray with origin (xr,yr) and with range ending at (x,y) to 0 (free) and the end point to 100 (occupied).
+    Arguments
+    ---------
+    xr : float
+        x-coordinate of the robot in the map frame
+    yr : float
+        y-coordinate of the robot in the map frame
+    x : ndarray
+        x-coordinates of the scan in the map frame
+    y : ndarray
+        y-coordinates of the scan in the map frame
+    map_resolution : float
+        Resolution of map in meter/pixel
+    map : ndarray
+        The map as a 2d numpy array
+
+    Tests
+    ------
+    >>> mapmsg = test_map()
+    >>> map = np.zeros((mapmsg.info.width, mapmsg.info.height), dtype=np.int8)
+    >>> map[:] = -1
+    >>> xr = 6.0
+    >>> yr = 3.0
+    >>> # Test 1 - ray from (6,3) to (7,3)
+    >>> x = 7.0
+    >>> y = 3.0
+    >>> ray_to_pixels(xr, yr, x, y, mapmsg.info.resolution, map)
+    >>> map[6, 12] == 0
+    True
+    >>> map[6, 13] == 0
+    True
+    >>> map[6, 14] == 100
+    True
+    >>> # Test 2 - ray from (6,3) to (6,2)
+    >>> x = 6.0
+    >>> y = 2.0
+    >>> ray_to_pixels(xr, yr, x, y, mapmsg.info.resolution, map)
+    >>> map[6, 12] == 0
+    True
+    >>> map[5, 12] == 0
+    True
+    >>> map[4, 12] == 100
+    True
+    >>> # Test 3 - ray from (6,3) to (5,3)
+    >>> x = 5.0
+    >>> y = 3.0
+    >>> ray_to_pixels(xr, yr, x, y, mapmsg.info.resolution, map)
+    >>> map[6, 12] == 0
+    True
+    >>> map[6, 11] == 0
+    True
+    >>> map[6, 10] == 100
+    True
+    >>> #map
+    """
+
+    v = np.array([x-xr, y-yr])
+    n_pixels = np.linalg.norm(v)/map_resolution
+    v = v/n_pixels
+    xp = int(round(xr/map_resolution))
+    yp = int(round(yr/map_resolution))
+    # Set pixels along the ray to 0 (free)
+    for i in range(int(n_pixels)):
+        #-------------------------------------------
         # Your code here
-        #--------------------------------------------------------------
-        #--------------------------------------------------------------
-def scan_to_map_coordinates(scan, odom):
+        # Determine x_ and y_ from xp, yp, i and v
+        x_ = 0
+        y_ = 0
+        map[y_, x_] = 0
+    # Set last pixel of ray to 100
+    map[int(round(y/map_resolution)), int(round(x/map_resolution))] = 100
+
+def scan_to_map_coordinates(scan, odom, origin):
     """ Convert a scan from the robot frame to the map frame.
     Arguments
     ---------
@@ -116,34 +189,51 @@ def scan_to_map_coordinates(scan, odom):
         The scan to convert
     odom : Odometry
         The odometry message providing the robot pose
+    origin : Pose
+        The pose of the map in the odom frame
     Returns
     -------
     (xr, yr) : tuple of floats
         The position of the robot in the map frame
-    xy : list
+    xy : list-like
         list of tuples (x,y) with the coordinates of the scan end points in the map frame
 
     Tests
     -----
+    >>> # Test 1 - With map origin at (0,0), no rotation of the map, and robot at (1,2) in odom frame
     >>> scan = test_laser_scan()
     >>> odom = test_odometry()
-    >>> orig, xy = scan_to_map_coordinates(scan, odom)
+    >>> origin = Pose()
+    >>> orig, xy = scan_to_map_coordinates(scan, odom, origin)
     >>> np.allclose(orig, (1.0, 2.0))
     True
-    >>> np.allclose(xy,[(0.0, 2.0), (1.0, 4.0), (2.0, 1.0)])
+    >>> np.allclose(xy,[(2.0, 2.0), (1.0, 3.0), (0.0, 2.0)])
     True
+    >>> # Test 2 - With map origin at (-5, 5), map frame rotated pi about x, and robot at (1,2) in odom frame
+    >>> map = test_map()
+    >>> origin = map.info.origin
+    >>> orig, xy = scan_to_map_coordinates(scan, odom, origin)
+    >>> np.allclose(orig, (6.0, 3.0))
+    True
+    >>> np.allclose(xy,[(7.0, 3.0), (6.0, 2.0), (5.0, 3.0)])
+    True
+    >>>
     """
 
-    robot_origin = odom.pose.pose.position
-    xr = robot_origin.x
-    yr = robot_origin.y
-    xy = []
-    for i in range(len(scan.ranges)):
-        th = scan.angle_min + i*scan.angle_increment
-        r = scan.ranges[i]
-        x, y = polar_to_cartesian(r, th)
-        xy.append((x, y))
-    return (xr, yr), xy
+    T_ob = numpify(odom.pose.pose)  # Transform from odom to base_link
+    T_om = numpify(origin)
+    T_mo = np.linalg.inv(T_om)
+    T_mb = np.dot(T_mo, T_ob)
+    TT= np.eye(3)
+    TT[:2, :2] = T_mb[:2, :2]
+    TT[:2, 2] = T_mb[:2, 3]
+
+    #------------------------------------------------------
+    # Your code here
+    # Transform all the scan end points to the map frame
+    # scan_endpoints =
+    #-----------------------------------------------------
+    return TT[:2, 2], scan_endpoints
 
 def polar_to_cartesian(r, th):
     """ Convert a polar coordinate to a cartesian coordinate.
@@ -159,21 +249,29 @@ def polar_to_cartesian(r, th):
         The cartesian coordinates
     Tests
     -----
-    >>> polar_to_cartesian(1.0, 0.0)
-    (1.0, 0.0)
-    >>> polar_to_cartesian(1.0, np.pi/2)
-    (0.0, 1.0)
-    >>> polar_to_cartesian(1.0, np.pi)
-    (-1.0, 0.0)
-    >>> polar_to_cartesian(1.0, 3*np.pi/2)
-    (0.0, -1.0)
+    >>> x, y = polar_to_cartesian(1.0, 0.0)
+    >>> np.allclose(x, 1.0)
+    True
+    >>> np.allclose(y, 0.0)
+    True
+    >>> x, y = polar_to_cartesian(1.0, np.pi/2)
+    >>> np.allclose(x, 0.0)
+    True
+    >>> np.allclose(y, 1.0)
+    True
+    >>> x, y = polar_to_cartesian(1.0, np.pi)
+    >>> np.allclose(x, -1.0)
+    True
+    >>> np.allclose(y, 0.0)
+    True
     """
-    #--------------------------------------------------------------
+
+    #------------------------------------------------------
     # Your code here
-    #--------------------------------------------------------------
-    #--------------------------------------------------------------
-
-
+    # Convert the polar coordinate to a cartesian coordinate
+    # x =
+    # y =
+    #-----------------------------------------------------
 
     return (x, y)
 def test_laser_scan():
@@ -203,6 +301,21 @@ def test_odometry():
     odom.pose.pose.orientation.w = np.cos(np.pi/4)
     return odom
 
+def test_map():
+    """ Create a test map. """
+    map = OccupancyGrid()
+    map.header.frame_id = 'map'
+    map.info.resolution = 0.5
+    map.info.width = 20
+    map.info.height = 20
+    # Position of the map origin in the odom frame.
+    map.info.origin.position.x = -5.0
+    map.info.origin.position.y = 5.0
+    # Rotation of pi around x-axis. So the map is upside down.
+    map.info.origin.orientation.w = 0.0
+    map.info.origin.orientation.x = 1.0
+    return map
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         if sys.argv[1] == "--test":
@@ -211,7 +324,11 @@ if __name__ == '__main__':
             sys.exit(0)
 
     rospy.init_node('Mapper')
-    Mapper().map()
+    width = rospy.get_param("/mapper/width", 400)
+    height = rospy.get_param("/mapper/height", 400)
+    resolution = rospy.get_param("/mapper/resolution", 0.1) # meters per pixel
+
+    Mapper(width, height, resolution).mapit()
 
 
 
