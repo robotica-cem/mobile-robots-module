@@ -22,7 +22,7 @@
   <!--load robot description -->
    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find puzzlebot_gazebo)/urdf/puzzlebotwithlidar.xacro'" />
 
-    <arg name="x" default="-4.5"/>
+    <arg name="x" default="-4"/>
     <arg name="y" default="-4"/>
     <arg name="z" default="0.0"/>
     <arg name="yaw" default="1.57"/>
