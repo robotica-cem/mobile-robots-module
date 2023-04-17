@@ -83,7 +83,10 @@ class Mapper:
                 # Your code here
                 # 1) For each ray in the scan, calculate the corresponding
                 #    position in the map by transforming the ray from the robot
-                #    frame to the map frame, using the odometry data. The map frame
+                #    frame to the map frame, using the odometry data. 
+		#    It is convenient to define the map frame as having its origin
+		#    in the pixel (0,0), and directions corresponding to the 
+		#    rows and pixels of the map (occupancy grid).
                 #    is defined as the frame of the first laser scan, when the robot
                 #    is initialized.
                 # 2) If the ray range is less than max_range, then set the map pixel
@@ -94,7 +97,6 @@ class Mapper:
 
                 orig_m, xy_m = scan_to_map_coordinates(self.scan, self.odom, self.map.info.origin)
 
-                # Set the map pixel corresponding to the end point of the ray to 100 (occupied).
                 print(orig_m)
                 for xy_ in xy_m:
                     #print(xy_)

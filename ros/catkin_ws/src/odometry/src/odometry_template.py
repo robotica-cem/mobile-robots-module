@@ -2,6 +2,7 @@
 """ Implement a node that calculates the odometry for the puzzlebot robot based on the angular velocities of the wheels
 """
 
+import sys
 import numpy as np
 import rospy
 import tf2_ros
@@ -82,7 +83,7 @@ class MyOdometryPublisher():
                 t.header.frame_id = "odom"
                 t.child_frame_id = "base_link"
                 #t.transform.translation = ?
-                #t.transform.rotation = ?
+                #t.transform.rotation =
                 self.br.sendTransform(t)
 
 

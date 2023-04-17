@@ -1,3 +1,4 @@
+*_KH*
 .rosinstall
 .rosinstall.bak
 cartographer/
@@ -146,3 +147,4 @@ dmypy.json
 .*~
 .idea/
 .config/
+*.swp
